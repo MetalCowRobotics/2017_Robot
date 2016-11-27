@@ -2,5 +2,6 @@
 .project
 .idea
 .settings
+.gradle
 bin/
 target/
