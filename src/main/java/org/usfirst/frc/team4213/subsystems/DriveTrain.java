@@ -14,9 +14,9 @@ public class DriveTrain implements Subsystem {
 
     }
 
-    private SpeedController leftMotor;
+    private final SpeedController leftMotor;
 
-    private SpeedController rightMotor;
+    private final SpeedController rightMotor;
 
     private DriveTrain () {
         leftMotor = new Talon(Integer.parseInt(System.getProperty("left.motor.channel")));

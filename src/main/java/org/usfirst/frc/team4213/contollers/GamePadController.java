@@ -11,6 +11,8 @@ public class GamePadController {
 
     public final static GamePadController INSTANCE = new GamePadController();
 
+    //TODO: Implement based on drive system.
+
     private final Joystick turnStick;
 
     private final Joystick throttleStick;
@@ -23,4 +25,10 @@ public class GamePadController {
     public double getThrottle() {
         return this.throttleStick.getY();
     }
+
+    public double getTurn() {
+        return this.turnStick.getX();
+    }
+
+    //TODO: Implement more controller interaction.
 }

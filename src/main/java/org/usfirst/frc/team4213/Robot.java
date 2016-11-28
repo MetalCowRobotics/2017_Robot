@@ -24,6 +24,36 @@ public class Robot extends IterativeRobot {
         gamePadController = GamePadController.INSTANCE;
     }
 
+    @Override
+    public void teleopPeriodic() {
+       //TODO: Implement
+    }
+
+    @Override
+    public void autonomousInit() {
+        //TODO: Implement
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+        //TODO: Implement
+    }
+
+    @Override
+    public void testPeriodic() {
+        //TODO: Implement
+    }
+
+    @Override
+    public void disabledInit() {
+        //TODO: Implement
+    }
+
+    @Override
+    public void disabledPeriodic() {
+        //TODO: Implement
+    }
+
     private void loadProperties() {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
 
