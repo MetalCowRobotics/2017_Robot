@@ -5,7 +5,7 @@ import org.usfirst.frc.team4213.subsystems.DriveTrain;
 /**
  * Drive Train Controller
  */
-public class DriveTrainController {
+public class DriveTrainController implements Runnable {
 
     public final static DriveTrainController INSTANCE = new DriveTrainController();
 
@@ -14,4 +14,9 @@ public class DriveTrainController {
     private DriveTrainController() {
         driveTrain = DriveTrain.INSTANCE;
     }
+
+	@Override
+	public void run() {
+				
+	}
 }
