@@ -22,4 +22,10 @@ public class DriveTrain implements Subsystem {
         leftMotor = new Talon(Integer.parseInt(System.getProperty("left.motor.channel")));
         rightMotor = new Talon(Integer.parseInt(System.getProperty("right.motor.channel")));
     }
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 }

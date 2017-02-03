@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
  * Generic Game Pad controller
  * Thread-Safe singleton instance created at start-up accessible through GamePadController.INSTANCE
  */
-public class GamePadController {
+public class GamePadController implements Runnable {
 
     public final static GamePadController INSTANCE = new GamePadController();
 
@@ -29,6 +29,12 @@ public class GamePadController {
     public double getTurn() {
         return this.turnStick.getX();
     }
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 
     //TODO: Implement more controller interaction.
 }

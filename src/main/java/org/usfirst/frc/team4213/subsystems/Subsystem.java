@@ -1,5 +1,5 @@
 package org.usfirst.frc.team4213.subsystems;
 
-public interface Subsystem {
+public interface Subsystem extends Runnable {
 
 }
