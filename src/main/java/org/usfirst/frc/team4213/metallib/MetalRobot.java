@@ -1,8 +1,8 @@
 package org.usfirst.frc.team4213.metallib;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.stream.Stream;
 
 import org.usfirst.frc.team4213.metallib.util.TaskRunner;
 
@@ -27,7 +27,7 @@ public abstract class MetalRobot extends RobotBase {
 	private DriverStation ds = DriverStation.getInstance();
 
 	public MetalRobot() {
-		Stream.of(RobotMode.values()).forEach((mode) -> {
+		EnumSet.allOf(RobotMode.class).forEach((mode) -> {
 			tasks.put(mode, new HashSet<Runnable>());
 		});
 
