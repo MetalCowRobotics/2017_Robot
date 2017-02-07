@@ -1,92 +1,94 @@
 package org.usfirst.frc.team4213.metallib;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
-import edu.wpi.first.wpilibj.SampleRobot;
+import org.usfirst.frc.team4213.metallib.util.TaskRunner;
 
-public class MetalRobot extends SampleRobot {
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 
-	private ScheduledThreadPoolExecutor executor;;
+public abstract class MetalRobot extends RobotBase {
 
-	private HashSet<ScheduledFuture<?>> runningTasks = new HashSet<ScheduledFuture<?>>();
+	public enum RobotMode {
+		AUTO, TELEOP, TEST, DISABLED;
+	}
 
-	private HashSet<Runnable> autoTasks = new HashSet<Runnable>();
-	private HashSet<Runnable> teleopTasks = new HashSet<Runnable>();
-	private HashSet<Runnable> testTasks = new HashSet<Runnable>();
-	private HashSet<Runnable> disabledTasks = new HashSet<Runnable>();
+	protected RobotMode runState;
 
-	protected final static int RUN_RATE = 20;
+	protected TaskRunner runner;
+
+	private final static int DELAY_RATE = 10;
+
+	private HashMap<RobotMode, HashSet<Runnable>> tasks;
+
+	private DriverStation ds = DriverStation.getInstance();
 
 	public MetalRobot() {
-		super();
-
-		executor = new ScheduledThreadPoolExecutor(2);
-		executor.setRemoveOnCancelPolicy(true);
-
-	}
-
-	final public void autonomous() {
-		clearTasks();
-		scheduleTaskSet(autoTasks);
-	}
-
-	final public void operatorControl() {
-		clearTasks();
-		scheduleTaskSet(teleopTasks);
-	}
-
-	final public void test() {
-		clearTasks();
-		scheduleTaskSet(testTasks);
-	}
-
-	final protected void disabled() {
-		clearTasks();
-		scheduleTaskSet(disabledTasks);
-	}
-
-	protected void clearTasks() {
-		runningTasks.forEach((task) -> {
-			task.cancel(false); // false is for whether the task should be
-								// interrupted or not
+		Stream.of(RobotMode.values()).forEach((mode) -> {
+			tasks.put(mode, new HashSet<Runnable>());
 		});
-		runningTasks.clear();
-		executor.purge();
+
+		final int cores = Runtime.getRuntime().availableProcessors();
+		runner = new TaskRunner(cores);
 	}
 
-	protected void scheduleTask(Runnable task, int rate) {
-		ScheduledFuture<?> future = executor.scheduleAtFixedRate(task, 0, rate,
-				TimeUnit.MILLISECONDS);
-		runningTasks.add(future);
+	protected void addTask(RobotMode mode, Runnable task) {
+		tasks.get(mode).add(task);
 	}
 
-	protected void runTask(Runnable task) {
-		executor.submit(task);
+	@Override
+	public final void startCompetition() {
+		FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
+		robotInit();
+		runModeChecker();
+		Thread.currentThread().suspend();
 	}
 
-	protected void scheduleTaskSet(HashSet<Runnable> tasks) {
-		tasks.forEach((task) -> {
-			scheduleTask(task, RUN_RATE);
-		});
+	public abstract void robotInit();
+
+	private void runModeChecker() {
+		runner.scheduleTask(() -> {
+			if (ds.isDisabled() && runState != RobotMode.DISABLED) {
+				setMode(RobotMode.DISABLED);
+			} else if (ds.isAutonomous() && runState != RobotMode.AUTO) {
+				setMode(RobotMode.AUTO);
+			} else if (ds.isTest() && runState != RobotMode.TEST) {
+				setMode(RobotMode.TEST);
+			} else if (ds.isOperatorControl() && runState != RobotMode.TELEOP) {
+				setMode(RobotMode.TELEOP);
+			}
+		} , DELAY_RATE);
 	}
 
-	protected void addAutoTask(Runnable task) {
-		autoTasks.add(task);
+	private void setMode(RobotMode mode) {
+		updateDSState(runState, false);
+		runState = mode;
+		updateDSState(runState, true);
+		startMode(runState);
 	}
 
-	protected void addTeleopTask(Runnable task) {
-		teleopTasks.add(task);
+	private void startMode(RobotMode mode) {
+		runner.clearTasks();
+		runner.scheduleTaskSet(tasks.get(mode), DELAY_RATE);
 	}
 
-	protected void addTestTask(Runnable task) {
-		testTasks.add(task);
+	private void updateDSState(RobotMode mode, boolean entering) {
+		switch (mode) {
+		case DISABLED:
+			ds.InDisabled(entering);
+			break;
+		case AUTO:
+			ds.InAutonomous(entering);
+			break;
+		case TEST:
+			ds.InTest(entering);
+			break;
+		case TELEOP:
+			ds.InOperatorControl(entering);
+			break;
+		}
 	}
-
-	protected void addDisabledTask(Runnable task) {
-		disabledTasks.add(task);
-	}
-
 }
