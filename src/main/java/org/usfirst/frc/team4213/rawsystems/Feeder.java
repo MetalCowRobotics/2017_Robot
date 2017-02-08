@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class Feeder {
-	public final static Feeder Instance = new Feeder();
+	public final static Feeder INSTANCE = new Feeder();
 	
 	private final SpeedController feederMotor; 
 	
