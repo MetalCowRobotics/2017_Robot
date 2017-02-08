@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class RollerIntake {
-	public final static RollerIntake Instance = new RollerIntake(); 
+	public final static RollerIntake INSTANCE = new RollerIntake(); 
 	private final SpeedController rollerMotor; 
 	
 	private RollerIntake() {
