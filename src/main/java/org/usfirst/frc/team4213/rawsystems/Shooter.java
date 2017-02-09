@@ -27,12 +27,24 @@ public class Shooter {
 		hoodMotor.set(speed);
 	}
 	
-	public int getFlywheelEncoderPosition(){
-		return flywheelEncoder.get(); 
+	public double getFlywheelEncoderPosition(){
+		return flywheelEncoder.getDistance(); 
 	}
 	
-	public int getHoodEncoderPosition(){
-		return hoodEncoder.get(); 
+	public double getHoodEncoderPosition(){
+		return hoodEncoder.getDistance();
 	}
-
+	
+	public double getFlywheelSpeed(){
+		return flywheelEncoder.getRate();
+	}
+	
+	public double getHoodSpeed(){
+		return hoodEncoder.getRate();
+	}
+	
+	public double getShooterPower(){
+		return flywheelMotor.get();
+	}
+	
 }
