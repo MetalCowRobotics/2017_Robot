@@ -19,14 +19,16 @@ public class TaskRunner {
 		executor.submit(task);
 	}
 
-	public void scheduleTask(Runnable task, int rate) {
+	public void scheduleTask(Runnable task, int rate, boolean killable) {
 		ScheduledFuture<?> future = executor.scheduleWithFixedDelay(task, 0, rate, TimeUnit.MILLISECONDS);
-		runningTasks.add(future);
+		if(killable){
+			runningTasks.add(future);
+		}
 	}
 
-	public void scheduleTaskSet(HashSet<Runnable> tasks, int rate) {
+	public void scheduleTaskSet(HashSet<Runnable> tasks, int rate, boolean killable) {
 		tasks.forEach((task) -> {
-			scheduleTask(task, rate);
+			scheduleTask(task, rate, killable);
 		});
 	}
 

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 public abstract class MetalRobot extends RobotBase {
 
 	public enum RobotMode {
-		AUTO, TELEOP, TEST, DISABLED;
+		AUTO, TELEOP, TEST, DISABLED, UNSET;
 	}
 
 	protected RobotMode runState;
@@ -22,7 +22,7 @@ public abstract class MetalRobot extends RobotBase {
 
 	private final static int DELAY_RATE = 10;
 
-	private HashMap<RobotMode, HashSet<Runnable>> tasks;
+	private HashMap<RobotMode, HashSet<Runnable>> tasks = new HashMap<RobotMode, HashSet<Runnable>>();
 
 	private DriverStation ds = DriverStation.getInstance();
 
@@ -33,6 +33,8 @@ public abstract class MetalRobot extends RobotBase {
 
 		final int cores = Runtime.getRuntime().availableProcessors();
 		runner = new TaskRunner(cores);
+		
+		runState = RobotMode.UNSET;
 	}
 
 	protected void addTask(RobotMode mode, Runnable task) {
@@ -51,19 +53,27 @@ public abstract class MetalRobot extends RobotBase {
 
 	private void runModeChecker() {
 		runner.scheduleTask(() -> {
-			if (ds.isDisabled() && runState != RobotMode.DISABLED) {
-				setMode(RobotMode.DISABLED);
-			} else if (ds.isAutonomous() && runState != RobotMode.AUTO) {
-				setMode(RobotMode.AUTO);
-			} else if (ds.isTest() && runState != RobotMode.TEST) {
-				setMode(RobotMode.TEST);
-			} else if (ds.isOperatorControl() && runState != RobotMode.TELEOP) {
-				setMode(RobotMode.TELEOP);
+			try{
+				if (ds.isDisabled() && runState != RobotMode.DISABLED) {
+					setMode(RobotMode.DISABLED);
+				} else if (ds.isAutonomous() && runState != RobotMode.AUTO) {
+					setMode(RobotMode.AUTO);
+				} else if (ds.isTest() && runState != RobotMode.TEST) {
+					setMode(RobotMode.TEST);
+				} else if (ds.isOperatorControl() && runState != RobotMode.TELEOP) {
+					System.out.println(ds.isOperatorControl());
+					setMode(RobotMode.TELEOP);
+				}
 			}
-		} , DELAY_RATE);
+			catch(Exception ex){
+				ex.printStackTrace();
+				System.out.println(ex.getMessage());
+			}
+		}, DELAY_RATE, false);
 	}
 
 	private void setMode(RobotMode mode) {
+		System.out.println("Entered" + mode.toString());
 		updateDSState(runState, false);
 		runState = mode;
 		updateDSState(runState, true);
@@ -72,7 +82,7 @@ public abstract class MetalRobot extends RobotBase {
 
 	private void startMode(RobotMode mode) {
 		runner.clearTasks();
-		runner.scheduleTaskSet(tasks.get(mode), DELAY_RATE);
+		runner.scheduleTaskSet(tasks.get(mode), DELAY_RATE, true);
 	}
 
 	private void updateDSState(RobotMode mode, boolean entering) {
@@ -88,6 +98,8 @@ public abstract class MetalRobot extends RobotBase {
 			break;
 		case TELEOP:
 			ds.InOperatorControl(entering);
+			break;
+		default:
 			break;
 		}
 	}
