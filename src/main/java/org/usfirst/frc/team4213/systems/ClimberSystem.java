@@ -13,6 +13,15 @@ public class ClimberSystem implements Subsystem {
 	public ClimberSystem() {
 		state = State.IDLE; 
 	}
+	
+	public void climb() {
+		state = State.CLIMBING;
+	}
+	
+	public void idle() {
+		state = State.IDLE; 
+	}
+	
 	@Override
 	public void run() {
 		switch(state) {
