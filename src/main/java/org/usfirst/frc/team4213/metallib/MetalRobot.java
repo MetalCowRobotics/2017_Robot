@@ -54,15 +54,22 @@ public abstract class MetalRobot extends RobotBase {
 	private void runModeChecker() {
 		runner.scheduleTask(() -> {
 			try{
-				if (ds.isDisabled() && runState != RobotMode.DISABLED) {
-					setMode(RobotMode.DISABLED);
-				} else if (ds.isAutonomous() && runState != RobotMode.AUTO) {
-					setMode(RobotMode.AUTO);
-				} else if (ds.isTest() && runState != RobotMode.TEST) {
-					setMode(RobotMode.TEST);
-				} else if (ds.isOperatorControl() && runState != RobotMode.TELEOP) {
-					System.out.println(ds.isOperatorControl());
-					setMode(RobotMode.TELEOP);
+				if (ds.isDisabled()) {
+					if(runState != RobotMode.DISABLED){
+						setMode(RobotMode.DISABLED);
+					}
+				} else if (ds.isAutonomous()) {
+					if(runState != RobotMode.AUTO){
+						setMode(RobotMode.AUTO);
+					}
+				} else if (ds.isTest()) {
+					if(runState != RobotMode.TEST){
+						setMode(RobotMode.TEST);
+					}
+				} else {
+					if(runState != RobotMode.TELEOP){
+						setMode(RobotMode.TELEOP);
+					}
 				}
 			}
 			catch(Exception ex){
