@@ -9,6 +9,15 @@ public class RollerIntakeSystem implements Subsystem{
 	}
 	
 	private State state;
+	
+	public void intake() {
+		state = State.RUNNING; 
+	}
+	
+	public void idle() {
+		state = State.IDLE; 
+	}
+	
 	@Override
 	public void run() {
 		switch(state){
