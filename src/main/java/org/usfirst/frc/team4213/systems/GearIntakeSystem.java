@@ -20,6 +20,22 @@ public class GearIntakeSystem implements Subsystem{
 		holdState = HoldState.HOLD;
 	}
 	
+	public void openTop(){
+		intakeState = IntakeState.OPEN;
+	}
+	
+	public void closeTop(){
+		intakeState = IntakeState.CLOSE;
+	}
+	
+	public void dropGear(){
+		holdState = HoldState.DROP;
+	}
+	
+	public void holdGear(){
+		holdState = HoldState.HOLD;
+	}
+	
 	@Override
 	public void run() {
 		
