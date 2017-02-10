@@ -10,6 +10,13 @@ public class FeederSystem implements Subsystem {
 	
 	private State state;
 	
+	public void feed() {
+		state = State.RUNNING;  
+	}
+	
+	public void idle() {
+		state = State.IDLE; 
+	}
 	@Override
 	public void run () {
 		switch(state){
