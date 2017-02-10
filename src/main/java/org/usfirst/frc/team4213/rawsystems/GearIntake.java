@@ -9,14 +9,11 @@ public class GearIntake {
 	
 	private final DoubleSolenoid topHinge; 
 	
-	private final DoubleSolenoid leftHinge; 
-	
-	private final DoubleSolenoid rightHinge; 
+	private final DoubleSolenoid frontHinge; 
 	
 	private GearIntake() { 
 		topHinge = new DoubleSolenoid(Integer.parseInt(System.getProperty("topHinge.solenoid.forward.channel")),Integer.parseInt(System.getProperty("topHinge.solenoid.reverse.channel")));
-		leftHinge = new DoubleSolenoid(Integer.parseInt(System.getProperty("leftHinge.solenoid.forward.channel")),Integer.parseInt(System.getProperty("leftHinge.solenoid.reverse.channel")));
-		rightHinge = new DoubleSolenoid(Integer.parseInt(System.getProperty("rightHinge.solenoid.forward.channel")),Integer.parseInt(System.getProperty("rightHinge.solenoid.reverse.channel")));
+		frontHinge = new DoubleSolenoid(Integer.parseInt(System.getProperty("frontHinge.solenoid.forward.channel")),Integer.parseInt(System.getProperty("frontHinge.solenoid.reverse.channel")));
 	}
 	
 	public void setTopHingeOpen(boolean open) {
@@ -27,18 +24,12 @@ public class GearIntake {
 		}
 	}
 	
-	public void setLeftHingeOpen(boolean open) {
+	
+	public void setFronttHingeOpen(boolean open) {
 		if(open) {
-			leftHinge.set(Value.kReverse);
+			frontHinge.set(Value.kReverse);
 		} else {
-			leftHinge.set(Value.kForward);
-		}
-	}
-	public void setRightHingeOpen(boolean open) {
-		if(open) {
-			rightHinge.set(Value.kReverse);
-		} else {
-			rightHinge.set(Value.kForward);
+			frontHinge.set(Value.kForward);
 		}
 	}
 }
