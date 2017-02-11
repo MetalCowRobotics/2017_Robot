@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Robot extends MetalRobot {
 
     @Override
-    public void robotInit() {
-        loadProperties();        
+    public void robotInit() {   
         registerTasks();
-        
     }
     
     public void registerTasks() {
@@ -45,20 +43,5 @@ public class Robot extends MetalRobot {
     	addTask(RobotMode.TEST,()->{
     		DriverStation.reportError("I'm in test 2", false);
     	});
-    }
-
-    private void loadProperties() {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
-
-        if(null != inputStream) {
-            Properties properties = new Properties();
-            try {
-                properties.load(inputStream);
-                System.setProperties(properties);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        }
     }
 }
