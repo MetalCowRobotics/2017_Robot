@@ -7,3 +7,8 @@
 bin/
 target/
 build/
+<<<<<<< HEAD
+=======
+*.swp
+
+>>>>>>> refs/remotes/origin/drivetrain-metallib

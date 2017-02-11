@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.usfirst.frc.team4213.contollers.DriveTrainController;
-import org.usfirst.frc.team4213.contollers.GamePadController;
+import org.usfirst.frc.team4213.controllers.DriverController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
+import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -15,14 +15,16 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class Robot extends MetalRobot {
 
+	Xbox360Controller driverController = new Xbox360Controller(1);
+	
     @Override
     public void robotInit() {
-        loadProperties();        
+        loadProperties();
         registerTasks();
-        
     }
     
     public void registerTasks() {
+
     	addTask(RobotMode.AUTO,()->{
     		DriverStation.reportError("I'm in auto 1", false);
     	});
@@ -47,6 +49,7 @@ public class Robot extends MetalRobot {
     	addTask(RobotMode.TEST,()->{
     		DriverStation.reportError("I'm in test 2", false);
     	});
+
     }
 
     private void loadProperties() {
