@@ -19,7 +19,7 @@ public class ShooterSystem implements Subsystem{
 	boolean controlHood;
 	
 	ErrorController shooterTBH;
-	ErrorController hoodPID;
+	PIDController hoodPID;
 	
 	public ShooterSystem(){
 		state = State.IDLE;
@@ -55,7 +55,9 @@ public class ShooterSystem implements Subsystem{
 	public void idle(){
 		state = State.IDLE;
 	}
-	
+	public void bumpHoodAngle(double angle) {
+		hoodPID.bumpTarget(angle);
+	}
 	
 	
 	

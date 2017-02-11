@@ -3,7 +3,6 @@ package org.usfirst.frc.team4213.rawsystems;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
 
 public class Shooter {
 	public final static Shooter INSTANCE = new Shooter();

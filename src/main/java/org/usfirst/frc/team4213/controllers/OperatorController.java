@@ -19,6 +19,7 @@ public class OperatorController implements Runnable {
 	private static FeederSystem feeder;
 	private static RollerIntakeSystem rollerIntake;
 
+	private static ShooterSystem hoodPID;
 	public OperatorController(CowGamepad controller) {
 		this.controller = controller;
 
@@ -56,6 +57,16 @@ public class OperatorController implements Runnable {
 			shooter.idle();
 			feeder.idle();
 		}
+		if (controller.getButton(GamepadButton.Y)) {
+			hoodPID.bumpHoodAngle(0.5);
+		}
+		else if (controller.getButton(GamepadButton.A)) {
+			hoodPID.bumpHoodAngle(-0.5);
+		}
+		else {
+			hoodPID.bumpHoodAngle(0);
+		}
+		
 		shooter.run();
 
 		if (controller.getButton(GamepadButton.LB)) {
@@ -70,6 +81,8 @@ public class OperatorController implements Runnable {
 			gearIntake.holdGear();
 		}
 		gearIntake.run();
+		
 	}
+	
 
 }
