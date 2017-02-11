@@ -8,7 +8,7 @@ import org.usfirst.frc.team4213.rawsystems.Shooter;
 public class ShooterSystem implements Subsystem{
 	
 	public enum State{
-		IDLE,RUNNING;
+		IDLE, SHOOTING;
 	}
 	
 	State state;
@@ -47,6 +47,19 @@ public class ShooterSystem implements Subsystem{
 		final double power = hoodPID.feedAndGetValue(pos, vel);
 		Shooter.INSTANCE.setHoodSpeed(power);
 	}
+
+	public void shoot(){
+		state = State.SHOOTING;
+	}
+	
+	public void idle(){
+		state = State.IDLE;
+	}
+	
+	
+	
+	
+	
 	
 	@Override
 	public void run() {
@@ -54,7 +67,7 @@ public class ShooterSystem implements Subsystem{
 	    case IDLE:  
 	    	shooterTBH.setTarget(0);
 	    	break; 
-	    case RUNNING:
+	    case SHOOTING:
 	    	shooterTBH.setTarget(defaultRunSpeed);
 		    break;
 		}

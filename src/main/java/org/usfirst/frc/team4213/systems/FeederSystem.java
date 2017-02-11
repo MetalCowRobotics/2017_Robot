@@ -18,7 +18,7 @@ public class FeederSystem implements Subsystem {
 		state = State.IDLE; 
 	}
 	@Override
-	public void run () {
+	public void run() {
 		switch(state){
 		case IDLE:
 			Feeder.INSTANCE.setMotorSpeed(0);

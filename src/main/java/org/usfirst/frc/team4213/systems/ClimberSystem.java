@@ -18,6 +18,7 @@ public class ClimberSystem implements Subsystem {
 		state = State.CLIMBING;
 	}
 	
+	
 	public void idle() {
 		state = State.IDLE; 
 	}
