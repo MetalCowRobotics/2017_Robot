@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.usfirst.frc.team4213.contollers.DriveTrainController;
-import org.usfirst.frc.team4213.contollers.GamePadController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
 
 import edu.wpi.first.wpilibj.DriverStation;
