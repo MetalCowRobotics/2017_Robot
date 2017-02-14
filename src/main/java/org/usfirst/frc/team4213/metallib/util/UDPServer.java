@@ -9,7 +9,9 @@ public class UDPServer implements Runnable {
 	private int socketNumber;
 	private double offsetX;
 	private double offsetY;
-
+	private DatagramSocket serverSocket;
+	
+	
 	public double getOffsetX() {
 		return offsetX;
 	}
@@ -28,6 +30,12 @@ public class UDPServer implements Runnable {
 
 	public UDPServer() {
 		setSocketNumber(SOCKET_NUMBER_DEFAULT);
+		try {
+			serverSocket = new DatagramSocket(getSocketNumber());
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public UDPServer(int socketNumber) {
@@ -40,12 +48,18 @@ public class UDPServer implements Runnable {
 
 	private void setSocketNumber(int socketNumber) {
 		this.socketNumber = socketNumber;
+		try {
+			serverSocket = new DatagramSocket(getSocketNumber());
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	public void run() {
-		DatagramSocket serverSocket;
+		
 		try {
-			serverSocket = new DatagramSocket(getSocketNumber());
 
 			byte[] receiveData = new byte[1024];
 
