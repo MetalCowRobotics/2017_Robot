@@ -8,8 +8,6 @@ import org.usfirst.frc.team4213.controllers.DriverController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 /**
  * Created by aaron on 11/21/16.
  */

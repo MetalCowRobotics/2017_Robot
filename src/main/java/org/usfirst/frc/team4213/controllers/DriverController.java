@@ -3,6 +3,7 @@ package org.usfirst.frc.team4213.controllers;
 import org.usfirst.frc.team4213.metallib.controllers.CowGamepad;
 import org.usfirst.frc.team4213.metallib.controllers.GamepadButton;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
+import org.usfirst.frc.team4213.metallib.drives.ArcadeDriveCommand;
 import org.usfirst.frc.team4213.metallib.drives.DualDriveCommand;
 import org.usfirst.frc.team4213.metallib.drives.TankDriveCommand;
 import org.usfirst.frc.team4213.systems.DriveSystem;
@@ -26,9 +27,9 @@ public class DriverController implements Runnable {
 	public void run() {
 		
 		double left = controller.getLY();
-		double right = controller.getRY();
+		double right = controller.getRX();
 		
-		DualDriveCommand command = new TankDriveCommand(left,right);
+		DualDriveCommand command = new ArcadeDriveCommand(left,right);
 		
 		driveSystem.setDrive(command);
 		

@@ -1,5 +1,8 @@
 package org.usfirst.frc.team4213.rawsystems;
 
+import org.usfirst.frc.team4213.metallib.ComponentBuilder;
+import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder;
@@ -16,13 +19,12 @@ public class Drivetrain {
     private final DoubleSolenoid brake; 
 
     private Drivetrain () {
-        leftMotor = new Talon(Integer.parseInt(System.getProperty("left.motor.channel")));
-        rightMotor = new Talon(Integer.parseInt(System.getProperty("right.motor.channel")));
-        brake = new DoubleSolenoid(Integer.parseInt(System.getProperty("brake.solenoid.forward.channel")),Integer.parseInt(System.getProperty("brake.solenoid.reverse.channel")));
+        leftMotor = ComponentBuilder.buildMotor(MotorType.TALON, "left.motor.channel","left.motor.reverse");
+        rightMotor = ComponentBuilder.buildMotor(MotorType.TALON, "right.motor.channel","right.motor.reverse");
+        brake = ComponentBuilder.buildDoubleSolenoid("brake.solenoid.forward.channel", "brake.solenoid.reverse.channel");
 //        leftFollower = new Encoder(Integer.parseInt(System.getProperty("left.follower.encoder.channelA")), Integer.parseInt(System.getProperty("left.follower.encoder.channelB")));
 //        upFollower = new Encoder(Integer.parseInt(System.getProperty("right.follower.encoder.channelA")), Integer.parseInt(System.getProperty("right.follower.encoder.channelB")));
     }
-   
 
     public void setLeftSpeed(double speed){
     	leftMotor.set(speed);

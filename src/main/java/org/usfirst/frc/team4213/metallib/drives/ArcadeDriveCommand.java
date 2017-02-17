@@ -7,7 +7,7 @@ public class ArcadeDriveCommand implements DualDriveCommand {
 	
 	public ArcadeDriveCommand(double throttle, double spin){
 		this.throttle = throttle;
-		this.spin = spin;
+		this.spin = -spin;
 	}
 	
 	@Override

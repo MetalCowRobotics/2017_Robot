@@ -57,6 +57,17 @@ public class ComponentBuilder {
 		return null;
 	}
 	
+	public static SpeedController buildMotor(MotorType type, String motorChannel, String reverseProperty){
+		SpeedController motor = buildMotor(type,motorChannel);
+		boolean inverted = store.getBool(reverseProperty);
+		
+		if(motor != null){
+			motor.setInverted(inverted);
+		}
+		
+		return motor;
+	}
+	
 	public enum MotorType {
 		JAGUAR,CANJAGUAR,SD540,SPARK,TALON,TALONSRX,CANTALON,VICTOR,VICTORSP;
 	}
