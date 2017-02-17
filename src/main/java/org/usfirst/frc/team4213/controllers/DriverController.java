@@ -13,24 +13,27 @@ import org.usfirst.frc.team4213.systems.DriveSystem;
  */
 public class DriverController implements Runnable {
 
+	public enum DriveMode {
+		ARCADE, TANK;
+	}
+	
     private static CowGamepad controller;
     
     private static DriveSystem driveSystem;
+    
+    private DriveMode mode;
 
     public DriverController(CowGamepad controller, DriveSystem driveSystem ) {
         DriverController.controller = controller;
     	DriverController.driveSystem = driveSystem;
+    	mode = DriveMode.TANK;
     }
 
 	@Override
 	public void run() {
 		
 		double left = controller.getLY();
-		double right = controller.getRX();
-		
-		DualDriveCommand command = new ArcadeDriveCommand(left,right);
-		
-		driveSystem.setDrive(command);
+		double right;
 		
 		if(controller.getButton(GamepadButton.A)){
 			driveSystem.brake();
@@ -38,7 +41,26 @@ public class DriverController implements Runnable {
 			driveSystem.drive();
 		}
 		
+		if(controller.getButton(GamepadButton.DPADLEFT)){
+			mode = DriveMode.TANK;
+		}else if (controller.getButton(GamepadButton.DPADRIGHT)){
+			mode = DriveMode.ARCADE;
+		}
 		
+		DualDriveCommand command;
+		
+		switch(mode){
+		case ARCADE:
+			right = controller.getRX();		
+			command = new ArcadeDriveCommand(left,right);
+			break;
+		case TANK:
+		default:
+			right = controller.getRY();
+			command = new TankDriveCommand(left,right);
+		}
+		
+		driveSystem.setDrive(command);
 		driveSystem.run();
 	}
 
