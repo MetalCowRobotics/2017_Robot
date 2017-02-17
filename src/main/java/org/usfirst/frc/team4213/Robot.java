@@ -11,6 +11,7 @@ import org.usfirst.frc.team4213.systems.FeederSystem;
 import org.usfirst.frc.team4213.systems.GearIntakeSystem;
 import org.usfirst.frc.team4213.systems.RollerIntakeSystem;
 import org.usfirst.frc.team4213.systems.ShooterSystem;
+import org.usfirst.frc.team4213.systems.Subsystem;
 
 /**
  * Created by aaron on 11/21/16.
@@ -18,8 +19,8 @@ import org.usfirst.frc.team4213.systems.ShooterSystem;
 public class Robot extends MetalRobot {
 
 	//Gamepads
-	Xbox360Controller driverGamepad = new Xbox360Controller(0);
-	Xbox360Controller operatorGamepad = new Xbox360Controller(1);
+	Xbox360Controller driverGamepad;
+	Xbox360Controller operatorGamepad;
 
 	
 	//Systems
@@ -35,47 +36,27 @@ public class Robot extends MetalRobot {
 	OperatorController operator;
 	
 	{	
-		if(PropertyStore.INSTANCE.getBool("drivesystem.enabled")){
-			drivetrain = new DriveSystem();
-			System.out.println("Drivetrain Initialized");
-		}else {
-			System.out.println("Drivetrain Disabled");
-		}
-		if(PropertyStore.INSTANCE.getBool("climbersystem.enabled")){
-			climber = new ClimberSystem();
-			System.out.println("Climber Initialized");
-		}else {
-			System.out.println("Climber Disabled");
-		}
-		if(PropertyStore.INSTANCE.getBool("feedersystem.enabled")){
-			feeder = new FeederSystem();
-			System.out.println("Feeder Initialized");
-		}else {
-			System.out.println("Feeder Disabled");
-		}
-		if(PropertyStore.INSTANCE.getBool("gearintakesystem.enabled")){
-			gearIntake = new GearIntakeSystem();
-			System.out.println("Gear Intake Initialized");
-		}else {
-			System.out.println("Gear Intake Disabled");
-		}
-		if(PropertyStore.INSTANCE.getBool("rollerintakesystem.enabled")){
-			rollerIntake = new RollerIntakeSystem();
-			System.out.println("Roller Intake Initialized");
-		}else {
-			System.out.println("Roller Intake Disabled");
-		}
-		if(PropertyStore.INSTANCE.getBool("shootersystem.enabled")){
-			shooter = new ShooterSystem();
-			System.out.println("Shooter Initialized");
-		}else {
-			System.out.println("Shooter Disabled");
-		}
-		
-		driver = new DriverController(driverGamepad,drivetrain);
-		operator = new OperatorController(operatorGamepad, climber, shooter, gearIntake, feeder, rollerIntake);		
+		initGamepads();
+		drivetrain = initSubsystem(DriveSystem.class);
+		climber = initSubsystem(ClimberSystem.class);
+		feeder = initSubsystem(FeederSystem.class);
+		gearIntake = initSubsystem(GearIntakeSystem.class);
+		rollerIntake = initSubsystem(RollerIntakeSystem.class);
+		shooter = initSubsystem(ShooterSystem.class);
+		initControllers();
 		
 	}
+	
+	public void initGamepads(){
+		driverGamepad = new Xbox360Controller(0);
+		operatorGamepad = new Xbox360Controller(1);
+	}
+	
+	public void initControllers(){
+		driver = new DriverController(driverGamepad,drivetrain);
+		operator = new OperatorController(operatorGamepad, climber, shooter, gearIntake, feeder, rollerIntake);
+	}
+	
 	
     @Override
     public void robotInit() {
@@ -86,4 +67,21 @@ public class Robot extends MetalRobot {
     	addTask(RobotMode.TELEOP, driver);
     	addTask(RobotMode.TELEOP, operator);
     }
+    
+	public <T extends Subsystem> T initSubsystem(Class<T> subsystem){
+		String systemName = subsystem.getSimpleName();
+		T system = null;
+		if(PropertyStore.INSTANCE.getBool(systemName.toLowerCase() + ".enabled")){
+			try {
+				system = subsystem.newInstance();
+				System.out.println(systemName + " is Enabled");
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}else {
+			System.out.println(systemName + " is Disabled");
+		}
+		return system;
+	}
+	
 }
