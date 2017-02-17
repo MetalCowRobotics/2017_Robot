@@ -111,4 +111,7 @@ public class ComponentBuilder {
 		return null;
 	}
 	
+	public static void setStore(KVStore store){
+		ComponentBuilder.store = store;
+	}
 }
