@@ -7,8 +7,6 @@ import org.usfirst.frc.team4213.rawsystems.Drivetrain;
  * Created by aaron on 11/18/16.
  */
 public class DriveSystem implements Subsystem {
-
-    public final static DriveSystem INSTANCE = new DriveSystem();
     
     public enum State {
     	DRIVE,BRAKE;
@@ -18,7 +16,7 @@ public class DriveSystem implements Subsystem {
     
     DualDriveCommand command;
     
-    private DriveSystem () {
+    public DriveSystem () {
     	state = State.DRIVE;
     }
     

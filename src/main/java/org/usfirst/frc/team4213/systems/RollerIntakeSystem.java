@@ -10,6 +10,10 @@ public class RollerIntakeSystem implements Subsystem{
 	
 	private State state;
 	
+	public RollerIntakeSystem(){
+		state = State.RUNNING;
+	}
+	
 	public void intake() {
 		state = State.RUNNING; 
 	}

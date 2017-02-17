@@ -8,6 +8,10 @@ public class FeederSystem implements Subsystem {
 		IDLE, RUNNING;
 	}
 	
+	public FeederSystem(){
+		state = State.IDLE;
+	}
+	
 	private State state;
 	
 	public void feed() {

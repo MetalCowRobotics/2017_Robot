@@ -13,14 +13,13 @@ import org.usfirst.frc.team4213.systems.DriveSystem;
  */
 public class DriverController implements Runnable {
 
-    public final static DriverController INSTANCE = new DriverController();
-
     private static CowGamepad controller;
     
     private static DriveSystem driveSystem;
 
-    private DriverController() {
-        driveSystem = DriveSystem.INSTANCE;
+    public DriverController(CowGamepad controller, DriveSystem driveSystem ) {
+        DriverController.controller = controller;
+    	DriverController.driveSystem = driveSystem;
     }
 
 	@Override
