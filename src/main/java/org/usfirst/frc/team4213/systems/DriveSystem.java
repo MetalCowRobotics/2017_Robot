@@ -10,9 +10,17 @@ public class DriveSystem implements Subsystem {
 
     public final static DriveSystem INSTANCE = new DriveSystem();
     
+    public enum State {
+    	DRIVE,BRAKE;
+    }
+    
+    private State state;
+    
     DualDriveCommand command;
     
-    private DriveSystem () {}
+    private DriveSystem () {
+    	state = State.DRIVE;
+    }
     
     public void setDrive(DualDriveCommand command){
     	this.command = command;
@@ -31,14 +39,33 @@ public class DriveSystem implements Subsystem {
     	return power;
     }
     
+    public void drive(){
+    	state = State.DRIVE;
+    }
+    
+    public void brake(){
+    	state = State.BRAKE;
+    }
+    
 	@Override
 	public void run() {	
 		
-		double leftPower = scalePower(command.getLeftVoltage());
-		double rightPower = scalePower(command.getRightVoltage());
 		
-		Drivetrain.INSTANCE.setLeftSpeed(leftPower);
-		Drivetrain.INSTANCE.setRightSpeed(rightPower);
+		switch(state){
+		case DRIVE:
+			double leftPower = scalePower(command.getLeftVoltage());
+			double rightPower = scalePower(command.getRightVoltage());
+			Drivetrain.INSTANCE.setLeftSpeed(leftPower);
+			Drivetrain.INSTANCE.setRightSpeed(rightPower);
+			Drivetrain.INSTANCE.setBrake(false);
+			break;
+		case BRAKE:
+			Drivetrain.INSTANCE.setLeftSpeed(0);
+			Drivetrain.INSTANCE.setRightSpeed(0);
+			Drivetrain.INSTANCE.setBrake(true);
+			break;
+		}
+		
 	}
 	
 }

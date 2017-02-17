@@ -11,16 +11,16 @@ public class Drivetrain {
 
     private final SpeedController leftMotor, rightMotor;
     
-    private final Encoder leftFollower, upFollower;
+//    private final Encoder leftFollower, upFollower;
     
     private final DoubleSolenoid brake; 
 
     private Drivetrain () {
         leftMotor = new Talon(Integer.parseInt(System.getProperty("left.motor.channel")));
         rightMotor = new Talon(Integer.parseInt(System.getProperty("right.motor.channel")));
-        brake = new DoubleSolenoid(Integer.parseInt(System.getProperty("brake.solenoid.forward.channel")),Integer.parseInt(System.getProperty("brake.solenoid.reverse.channel")));  
-        leftFollower = new Encoder(Integer.parseInt(System.getProperty("left.follower.encoder.channelA")), Integer.parseInt(System.getProperty("left.follower.encoder.channelB")));
-        upFollower = new Encoder(Integer.parseInt(System.getProperty("right.follower.encoder.channelA")), Integer.parseInt(System.getProperty("right.follower.encoder.channelB")));
+        brake = new DoubleSolenoid(Integer.parseInt(System.getProperty("brake.solenoid.forward.channel")),Integer.parseInt(System.getProperty("brake.solenoid.reverse.channel")));
+//        leftFollower = new Encoder(Integer.parseInt(System.getProperty("left.follower.encoder.channelA")), Integer.parseInt(System.getProperty("left.follower.encoder.channelB")));
+//        upFollower = new Encoder(Integer.parseInt(System.getProperty("right.follower.encoder.channelA")), Integer.parseInt(System.getProperty("right.follower.encoder.channelB")));
     }
    
 

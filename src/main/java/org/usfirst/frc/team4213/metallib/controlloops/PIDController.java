@@ -19,14 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
  * @author hughest1
  */
 public class PIDController extends ErrorController {
-	/**
-	 * Constants for the controller
-	 * 
-	 * @var kp the proportional gain
-	 * @var ki the integral gain
-	 * @var kd the derivative gain
-	 * @var integralLifespan how (in seconds) long the positionData will go for
-	 */
+
 	public double kp, ki, kd, integralLifespan;
 
 	// Previous position data
@@ -50,19 +43,6 @@ public class PIDController extends ErrorController {
 		}
 	}
 
-	/**
-	 * Creates a new PID controller.
-	 * 
-	 * @param kp
-	 *            the proportional gain
-	 * @param ki
-	 *            the integral gain
-	 * @param maxIInfluence
-	 *            the maximum influence the integral is allowed to have on the
-	 *            response
-	 * @param kd
-	 *            the derivative gain
-	 */
 	public PIDController(String name, double kp, double ki, double kd, double integralLifespan) {
 		super(name);
 		this.kp = kp;
@@ -118,7 +98,6 @@ public class PIDController extends ErrorController {
 		
 		final PositionDataPoint lastPosition = positionData.firstElement();
 		return positionData.stream()
-					.skip(1)
 					.mapToDouble((position)-> {
 						return (target - position.value) * (lastPosition.time.get() - position.time.get());
 					})

@@ -45,11 +45,6 @@ public abstract class ErrorController {
         this.target = currentTarget;
     }
     
-    /**
-     * Computes a new response based on current value
-     * @param currentValue the current system position
-     * @return the response to create
-     */
     abstract public double feedAndGetValue(double firstValue, double secondValue);
     
     /**

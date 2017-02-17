@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4213.controllers;
 
 import org.usfirst.frc.team4213.metallib.controllers.CowGamepad;
+import org.usfirst.frc.team4213.metallib.controllers.GamepadButton;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
 import org.usfirst.frc.team4213.metallib.drives.DualDriveCommand;
 import org.usfirst.frc.team4213.metallib.drives.TankDriveCommand;
@@ -30,6 +31,13 @@ public class DriverController implements Runnable {
 		DualDriveCommand command = new TankDriveCommand(left,right);
 		
 		driveSystem.setDrive(command);
+		
+		if(controller.getButton(GamepadButton.A)){
+			driveSystem.brake();
+		}else{
+			driveSystem.drive();
+		}
+		
 		
 		driveSystem.run();
 	}
