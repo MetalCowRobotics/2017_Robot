@@ -26,19 +26,15 @@ public class OperatorController implements Runnable {
 
 	@Override
 	public void run() {
-		
-		shoot();
-		moveHood();
-		gearHold();
-		climb();
 		topIntake();
-		
+		climb();
+		gearHold();
+		moveHood();
+		shoot();
+		idleIntake();
 		runSystems();
 	}
 	
-	public void feed(){
-		
-	}
 	
 	public void topIntake(){
 		if (controller.getButton(GamepadButton.LB)) {
@@ -53,16 +49,6 @@ public class OperatorController implements Runnable {
 			climber.climb();
 		} else {
 			climber.idle();
-		}
-	}
-	
-	public void idleIntake(){
-		if (controller.getButton(GamepadButton.DPADUP)) {
-			rollerIntake.idle();
-		} else if (controller.getButton(GamepadButton.RT)) {
-			rollerIntake.idle();
-		} else {
-			rollerIntake.intake();
 		}
 	}
 	
@@ -94,6 +80,16 @@ public class OperatorController implements Runnable {
 		} else {
 			shooter.idle();
 			feeder.idle();
+		}
+	}
+	
+	public void idleIntake(){
+		if (controller.getButton(GamepadButton.DPADUP)) {
+			rollerIntake.idle();
+		} else if (controller.getButton(GamepadButton.RT)) {
+			rollerIntake.idle();
+		} else {
+			rollerIntake.intake();
 		}
 	}
 	
