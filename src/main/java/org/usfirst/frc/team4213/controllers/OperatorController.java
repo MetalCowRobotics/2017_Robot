@@ -19,17 +19,44 @@ public class OperatorController implements Runnable {
 	private static FeederSystem feeder;
 	private static RollerIntakeSystem rollerIntake;
 
-	private static ShooterSystem hoodPID;
 	public OperatorController(CowGamepad controller) {
 		this.controller = controller;
-
+		
 	}
 
 	@Override
 	public void run() {
-		//TODO refactor this to methods
 		
+		shoot();
+		moveHood();
+		gearHold();
+		climb();
+		topIntake();
 		
+		runSystems();
+	}
+	
+	public void feed(){
+		
+	}
+	
+	public void topIntake(){
+		if (controller.getButton(GamepadButton.LB)) {
+			gearIntake.openTop();
+		} else {
+			gearIntake.closeTop();
+		}
+	}
+	
+	public void climb(){
+		if (controller.getButton(GamepadButton.DPADUP)) {
+			climber.climb();
+		} else {
+			climber.idle();
+		}
+	}
+	
+	public void idleIntake(){
 		if (controller.getButton(GamepadButton.DPADUP)) {
 			rollerIntake.idle();
 		} else if (controller.getButton(GamepadButton.RT)) {
@@ -37,15 +64,26 @@ public class OperatorController implements Runnable {
 		} else {
 			rollerIntake.intake();
 		}
-		rollerIntake.run();
-
-		if (controller.getButton(GamepadButton.DPADUP)) {
-			climber.climb();
+	}
+	
+	public void gearHold(){
+		if (controller.getButton(GamepadButton.LT)) {
+			gearIntake.dropGear();
 		} else {
-			climber.idle();
+			gearIntake.holdGear();
 		}
-		climber.run();
-
+	}
+	
+	public void moveHood() {
+		if (controller.getButton(GamepadButton.Y)) {
+			shooter.bumpHoodAngle(0.5);
+		}
+		else if (controller.getButton(GamepadButton.A)) {
+			shooter.bumpHoodAngle(-0.5);
+		}
+	}
+	
+	public void shoot(){
 		if (controller.getButton(GamepadButton.RT)) {
 			shooter.shoot();
 			if (controller.getButton(GamepadButton.RB)) {
@@ -57,32 +95,15 @@ public class OperatorController implements Runnable {
 			shooter.idle();
 			feeder.idle();
 		}
-		if (controller.getButton(GamepadButton.Y)) {
-			hoodPID.bumpHoodAngle(0.5);
-		}
-		else if (controller.getButton(GamepadButton.A)) {
-			hoodPID.bumpHoodAngle(-0.5);
-		}
-		else {
-			hoodPID.bumpHoodAngle(0);
-		}
-		
-		shooter.run();
-
-		if (controller.getButton(GamepadButton.LB)) {
-			gearIntake.openTop();
-		} else {
-			gearIntake.closeTop();
-		}
-
-		if (controller.getButton(GamepadButton.LT)) {
-			gearIntake.dropGear();
-		} else {
-			gearIntake.holdGear();
-		}
-		gearIntake.run();
-		
 	}
 	
+	public void runSystems(){
+		gearIntake.run();
+		shooter.run();
+		climber.run();
+		rollerIntake.run();
+		feeder.run();
+		
+	}
 
 }
