@@ -6,8 +6,11 @@ public class ArcadeDriveCommand implements DualDriveCommand {
 	double spin;
 	
 	public ArcadeDriveCommand(double throttle, double spin){
+		if(Math.abs(throttle) < 0.08){
+			throttle = 0.01;
+		}
 		this.throttle = throttle;
-		this.spin = -spin;
+		this.spin = spin;
 	}
 	
 	@Override
@@ -17,9 +20,9 @@ public class ArcadeDriveCommand implements DualDriveCommand {
 		
 		if (throttle > 0.0) {
 			if (spin > 0.0) {
-				leftPower = throttle - spin;
+				leftPower = Math.max(throttle, spin);
 			} else {
-				leftPower = Math.max(throttle, -spin);
+				leftPower = throttle + spin;
 			}
 		} else {
 			if (spin > 0.0) {
@@ -35,12 +38,12 @@ public class ArcadeDriveCommand implements DualDriveCommand {
 	@Override
 	public double getRightVoltage() {
 		double rightPower;
-
+		
 		if (throttle > 0.0) {
 			if (spin > 0.0) {
-				rightPower = Math.max(throttle, spin);
+				rightPower = throttle - spin;
 			} else {
-				rightPower = throttle + spin;
+				rightPower = Math.max(throttle, -spin);
 			}
 		} else {
 			if (spin > 0.0) {
