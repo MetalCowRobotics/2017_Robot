@@ -27,15 +27,11 @@ public class TaskRunner {
 	}
 
 	public void scheduleTaskSet(HashSet<Runnable> tasks, int rate, boolean killable) {
-		tasks.forEach((task) -> {
-			scheduleTask(task, rate, killable);
-		});
+		tasks.forEach(task -> scheduleTask(task, rate, killable));
 	}
 
 	public void clearTasks() {
-		runningTasks.forEach((task) -> {
-			task.cancel(false); // task interruption = false
-		});
+		runningTasks.forEach(task -> task.cancel(false));
 		runningTasks.clear();
 		executor.purge();
 	}

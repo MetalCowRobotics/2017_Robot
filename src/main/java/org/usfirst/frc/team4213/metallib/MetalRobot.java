@@ -27,9 +27,7 @@ public abstract class MetalRobot extends RobotBase {
 	private DriverStation ds = DriverStation.getInstance();
 
 	public MetalRobot() {
-		EnumSet.allOf(RobotMode.class).forEach((mode) -> {
-			tasks.put(mode, new HashSet<Runnable>());
-		});
+		EnumSet.allOf(RobotMode.class).forEach((mode) -> tasks.put(mode, new HashSet<Runnable>()));
 
 		final int cores = Runtime.getRuntime().availableProcessors();
 		runner = new TaskRunner(cores);
