@@ -5,8 +5,8 @@ import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class Climber {
-	public final static Climber INSTANCE = new Climber(); 
+public enum Climber {
+	INSTANCE;
 	
 	private final SpeedController climberMotor; 
 	

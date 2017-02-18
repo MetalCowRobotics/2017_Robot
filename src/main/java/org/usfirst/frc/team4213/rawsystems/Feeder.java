@@ -5,9 +5,9 @@ import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class Feeder {
-	public final static Feeder INSTANCE = new Feeder();
-	
+public enum Feeder {
+	INSTANCE;
+		
 	private final SpeedController feederMotor; 
 	
 	private Feeder() {

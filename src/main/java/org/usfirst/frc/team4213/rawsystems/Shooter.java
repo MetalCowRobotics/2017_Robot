@@ -5,8 +5,9 @@ import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
 
-public class Shooter {
-	public final static Shooter INSTANCE = new Shooter();
+public enum Shooter {
+
+	INSTANCE;
 	
 	private final CANTalon flywheelMotor, hoodMotor; 
 		

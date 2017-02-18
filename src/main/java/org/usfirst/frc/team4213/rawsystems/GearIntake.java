@@ -5,9 +5,9 @@ import org.usfirst.frc.team4213.metallib.ComponentBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class GearIntake {
+public enum GearIntake {
 
-	public final static GearIntake INSTANCE = new GearIntake();
+	INSTANCE;
 	
 	private final DoubleSolenoid topHinge; 
 	

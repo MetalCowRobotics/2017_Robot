@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class Drivetrain {
-	public final static Drivetrain INSTANCE = new Drivetrain();
+public enum Drivetrain {
+	INSTANCE;
 
     private final CANTalon leftMotor, rightMotor;
     

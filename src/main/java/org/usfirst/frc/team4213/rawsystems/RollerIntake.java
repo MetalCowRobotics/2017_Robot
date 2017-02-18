@@ -5,8 +5,10 @@ import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class RollerIntake {
-	public final static RollerIntake INSTANCE = new RollerIntake(); 
+public enum RollerIntake {
+	
+	INSTANCE;
+	
 	private final SpeedController rollerMotor; 
 	
 	private RollerIntake() {
