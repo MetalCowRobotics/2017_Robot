@@ -1,6 +1,8 @@
 package org.usfirst.frc.team4213.rawsystems;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import org.usfirst.frc.team4213.metallib.ComponentBuilder;
+import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
+
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class RollerIntake {
@@ -8,7 +10,7 @@ public class RollerIntake {
 	private final SpeedController rollerMotor; 
 	
 	private RollerIntake() {
-		rollerMotor = new CANTalon(Integer.parseInt(System.getProperty("roller.motor.channel")));
+		rollerMotor = ComponentBuilder.buildMotor(MotorType.CANTALON, "roller.motor.channel", "roller.motor.reverse");
 	}
 	
 	public void setRollerSpeed(double speed){

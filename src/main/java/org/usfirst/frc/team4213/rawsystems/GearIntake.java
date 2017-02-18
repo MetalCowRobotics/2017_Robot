@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4213.rawsystems;
 
+import org.usfirst.frc.team4213.metallib.ComponentBuilder;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
@@ -12,8 +14,8 @@ public class GearIntake {
 	private final DoubleSolenoid frontHinge; 
 	
 	private GearIntake() { 
-		topHinge = new DoubleSolenoid(Integer.parseInt(System.getProperty("topHinge.solenoid.forward.channel")),Integer.parseInt(System.getProperty("topHinge.solenoid.reverse.channel")));
-		frontHinge = new DoubleSolenoid(Integer.parseInt(System.getProperty("frontHinge.solenoid.forward.channel")),Integer.parseInt(System.getProperty("frontHinge.solenoid.reverse.channel")));
+		topHinge = ComponentBuilder.buildDoubleSolenoid("topHinge.solenoid.forward.channel", "topHinge.solenoid.reverse.channel");
+		frontHinge = ComponentBuilder.buildDoubleSolenoid("frontHinge.solenoid.forward.channel", "frontHinge.solenoid.reverse.channel");
 	}
 	
 	public void setTopHingeOpen(boolean open) {

@@ -1,22 +1,18 @@
 package org.usfirst.frc.team4213.rawsystems;
 
+import org.usfirst.frc.team4213.metallib.ComponentBuilder;
+import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
+
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedController;
 
 public class Shooter {
 	public final static Shooter INSTANCE = new Shooter();
 	
-	private final SpeedController flywheelMotor, hoodMotor; 
-	
-	private final Encoder hoodEncoder, flywheelEncoder; 
-	
+	private final CANTalon flywheelMotor, hoodMotor; 
+		
 	private Shooter() {
-		flywheelMotor = new CANTalon(Integer.parseInt(System.getProperty("flywheel.motor.channel")));
-		hoodMotor = new CANTalon(Integer.parseInt(System.getProperty("hood.motor.channel")));
-	
-		flywheelEncoder = new Encoder(Integer.parseInt(System.getProperty("flywheel.endcoder.channel.a")),Integer.parseInt(System.getProperty("flywheel.endcoder.channel.b"))); 
-		hoodEncoder = new Encoder(Integer.parseInt(System.getProperty("hood.encoder.channel.a")),Integer.parseInt(System.getProperty("hood.encoder.channel.b")));
+		flywheelMotor = (CANTalon) ComponentBuilder.buildMotor(MotorType.CANTALON, "flywheel.motor.channel", "flywheel.motor.reverse");
+		hoodMotor = (CANTalon) ComponentBuilder.buildMotor(MotorType.CANTALON, "hood.motor.channel", "hood.motor.reverse");
 	}
 	public void setFlywheelSpeed(double speed){
 		flywheelMotor.set(speed);
@@ -27,19 +23,19 @@ public class Shooter {
 	}
 	
 	public double getFlywheelEncoderPosition(){
-		return flywheelEncoder.getDistance(); 
+		return flywheelMotor.getEncPosition(); 
 	}
 	
 	public double getHoodEncoderPosition(){
-		return hoodEncoder.getDistance();
+		return hoodMotor.getEncPosition();
 	}
 	
 	public double getFlywheelSpeed(){
-		return flywheelEncoder.getRate();
+		return flywheelMotor.getEncVelocity();
 	}
 	
 	public double getHoodSpeed(){
-		return hoodEncoder.getRate();
+		return hoodMotor.getEncVelocity();
 	}
 	
 	public double getShooterPower(){
