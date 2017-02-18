@@ -33,7 +33,6 @@ public class UDPServer implements Runnable {
 		try {
 			serverSocket = new DatagramSocket(getSocketNumber());
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -51,7 +50,6 @@ public class UDPServer implements Runnable {
 		try {
 			serverSocket = new DatagramSocket(getSocketNumber());
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -69,16 +67,6 @@ public class UDPServer implements Runnable {
 			String[] xAndY = offsets.split(",");
 			setOffsetX(Double.parseDouble(xAndY[0]));
 			setOffsetY(Double.parseDouble(xAndY[1]));
-
-			// System.out.println("RECEIVED: " + sentence);
-			// InetAddress IPAddress = receivePacket.getAddress();
-			// int port = receivePacket.getPort();
-
-			// we are not sending anything back
-			// byte[] sendData = new byte[1024];
-			// DatagramPacket sendPacket = new DatagramPacket(sendData,
-			// sendData.length, IPAddress, port);
-			// serverSocket.send(sendPacket);
 
 		} catch (SocketException e) {
 			e.printStackTrace();
