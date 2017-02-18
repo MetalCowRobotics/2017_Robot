@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4213.systems;
 
+import org.usfirst.frc.team4213.metallib.util.PropertyStore;
 import org.usfirst.frc.team4213.rawsystems.RollerIntake;
 
 public class RollerIntakeSystem implements Subsystem{
@@ -9,9 +10,11 @@ public class RollerIntakeSystem implements Subsystem{
 	}
 	
 	private State state;
+	private double runSpeed;
 	
 	public RollerIntakeSystem(){
 		state = State.RUNNING;
+		runSpeed = PropertyStore.INSTANCE.getDouble("rollerintake.speed");
 	}
 	
 	public void intake() {
@@ -29,7 +32,7 @@ public class RollerIntakeSystem implements Subsystem{
 			RollerIntake.INSTANCE.setRollerSpeed(0);
 			break;
 		case RUNNING:
-			RollerIntake.INSTANCE.setRollerSpeed(Double.parseDouble(System.getProperty("rollerintake.speed")));
+			RollerIntake.INSTANCE.setRollerSpeed(runSpeed);
 			break;
 		}
 		

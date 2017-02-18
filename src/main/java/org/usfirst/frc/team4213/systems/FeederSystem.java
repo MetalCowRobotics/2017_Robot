@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4213.systems;
 
+import org.usfirst.frc.team4213.metallib.util.PropertyStore;
 import org.usfirst.frc.team4213.rawsystems.Feeder;
 
 public class FeederSystem implements Subsystem {
@@ -10,8 +11,10 @@ public class FeederSystem implements Subsystem {
 	
 	public FeederSystem(){
 		state = State.IDLE;
+		feedSpeed = PropertyStore.INSTANCE.getDouble("feeder.speed");
 	}
 	
+	private double feedSpeed;
 	private State state;
 	
 	public void feed() {
@@ -28,7 +31,7 @@ public class FeederSystem implements Subsystem {
 			Feeder.INSTANCE.setMotorSpeed(0);
 			break;
 		case RUNNING:
-			Feeder.INSTANCE.setMotorSpeed(Double.parseDouble(System.getProperty("feeder.speed")));
+			Feeder.INSTANCE.setMotorSpeed(feedSpeed);
 			break;
 		}
 	}
