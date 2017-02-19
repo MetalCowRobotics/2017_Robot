@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4213.controllers;
 
+import java.util.Optional;
+
 import org.usfirst.frc.team4213.metallib.controllers.CowGamepad;
 import org.usfirst.frc.team4213.metallib.controllers.GamepadButton;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
@@ -19,13 +21,13 @@ public class DriverController implements Runnable {
 	
     private static CowGamepad controller;
     
-    private static DriveSystem driveSystem;
+    private static Optional<DriveSystem> driveSystem;
     
     private DriveMode mode;
 
     public DriverController(CowGamepad controller, DriveSystem driveSystem ) {
         DriverController.controller = controller;
-    	DriverController.driveSystem = driveSystem;
+    	DriverController.driveSystem = Optional.ofNullable(driveSystem);
     	mode = DriveMode.TANK;
     }
 
@@ -36,9 +38,9 @@ public class DriverController implements Runnable {
 		double right;
 		
 		if(controller.getButton(GamepadButton.A)){
-			driveSystem.brake();
+			driveSystem.ifPresent(DriveSystem::brake);
 		}else{
-			driveSystem.drive();
+			driveSystem.ifPresent(DriveSystem::drive);
 		}
 		
 		if(controller.getButton(GamepadButton.DPADLEFT)){
@@ -60,8 +62,10 @@ public class DriverController implements Runnable {
 			command = new TankDriveCommand(left,right);
 		}
 		
-		driveSystem.setDrive(command);
-		driveSystem.run();
+		final DualDriveCommand finalCommand = command;
+		
+		driveSystem.ifPresent(drive -> drive.setDrive(finalCommand));
+		driveSystem.ifPresent(DriveSystem::run);
 	}
 
 	public static void setController(CowGamepad controller) {

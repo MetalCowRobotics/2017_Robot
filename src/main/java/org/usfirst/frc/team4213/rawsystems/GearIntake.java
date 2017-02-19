@@ -20,9 +20,9 @@ public enum GearIntake {
 	
 	public void setTopHingeOpen(boolean open) {
 		if(open) {
-			topHinge.set(Value.kReverse);
-		} else {
 			topHinge.set(Value.kForward);
+		} else {
+			topHinge.set(Value.kReverse);
 		}
 	}
 	

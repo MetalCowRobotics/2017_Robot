@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4213.systems;
 
+import org.usfirst.frc.team4213.metallib.util.PropertyStore;
 import org.usfirst.frc.team4213.rawsystems.Climber;
 
 public class ClimberSystem implements Subsystem {
@@ -8,10 +9,13 @@ public class ClimberSystem implements Subsystem {
 		CLIMBING,IDLE;	
 	}
 	
+	private double climbSpeed;
+	
 	private State state; 
 	
 	public ClimberSystem() {
 		state = State.IDLE; 
+		climbSpeed = PropertyStore.INSTANCE.getDouble("climber.speed");
 	}
 	
 	public void climb() {
@@ -27,7 +31,7 @@ public class ClimberSystem implements Subsystem {
 	public void run() {
 		switch(state) {
 		case CLIMBING:
-			Climber.INSTANCE.setClimberSpeed(1);
+			Climber.INSTANCE.setClimberSpeed(climbSpeed);
 			break;
 		case IDLE:
 			Climber.INSTANCE.setClimberSpeed(0);

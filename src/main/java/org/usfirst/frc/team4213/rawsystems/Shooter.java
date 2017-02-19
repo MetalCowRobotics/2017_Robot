@@ -10,7 +10,7 @@ public enum Shooter {
 	INSTANCE;
 	
 	private final CANTalon flywheelMotor, hoodMotor; 
-		
+	
 	private Shooter() {
 		flywheelMotor = (CANTalon) ComponentBuilder.buildMotor(MotorType.CANTALON, "flywheel.motor.channel", "flywheel.motor.reverse");
 		hoodMotor = (CANTalon) ComponentBuilder.buildMotor(MotorType.CANTALON, "hood.motor.channel", "hood.motor.reverse");
@@ -23,21 +23,21 @@ public enum Shooter {
 		hoodMotor.set(speed);
 	}
 	
-	public double getFlywheelEncoderPosition(){
-		return flywheelMotor.getEncPosition(); 
-	}
-	
-	public double getHoodEncoderPosition(){
-		return hoodMotor.getEncPosition();
-	}
-	
-	public double getFlywheelSpeed(){
-		return flywheelMotor.getEncVelocity();
-	}
-	
-	public double getHoodSpeed(){
-		return hoodMotor.getEncVelocity();
-	}
+//	public double getFlywheelEncoderPosition(){
+//		return flywheelMotor.getEncPosition(); 
+//	}
+//	
+//	public double getHoodEncoderPosition(){
+//		return hoodMotor.getEncPosition();
+//	}
+//	
+//	public double getFlywheelSpeed(){
+//		return flywheelMotor.getEncVelocity();
+//	}
+//	
+//	public double getHoodSpeed(){
+//		return hoodMotor.getEncVelocity();
+//	}
 	
 	public double getShooterPower(){
 		return flywheelMotor.get();

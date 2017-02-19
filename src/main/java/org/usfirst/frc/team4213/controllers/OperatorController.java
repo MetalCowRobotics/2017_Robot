@@ -47,7 +47,7 @@ public class OperatorController implements Runnable {
 		if (controller.getButton(GamepadButton.LB)) {
 			gearIntake.ifPresent(GearIntakeSystem::openTop);
 		} else {
-			gearIntake.ifPresent(GearIntakeSystem::openTop);
+			gearIntake.ifPresent(GearIntakeSystem::closeTop);
 		}
 	}
 	
@@ -69,10 +69,14 @@ public class OperatorController implements Runnable {
 	
 	public void moveHood() {
 		if (controller.getButton(GamepadButton.Y)) {
-			shooter.ifPresent(shooter -> shooter.bumpHoodAngle(0.5));
+			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(0.5));
+			shooter.ifPresent(ShooterSystem::bumpUp);
 		}
 		else if (controller.getButton(GamepadButton.A)) {
-			shooter.ifPresent(shooter -> shooter.bumpHoodAngle(-0.5));
+			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(-0.5));
+			shooter.ifPresent(ShooterSystem::bumpDown);
+		}else {
+			shooter.ifPresent(ShooterSystem::noBump);
 		}
 	}
 	

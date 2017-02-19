@@ -5,6 +5,8 @@ import org.usfirst.frc.team4213.controllers.OperatorController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
 import org.usfirst.frc.team4213.metallib.util.PropertyStore;
+import org.usfirst.frc.team4213.rawsystems.Climber;
+import org.usfirst.frc.team4213.rawsystems.Drivetrain;
 import org.usfirst.frc.team4213.systems.ClimberSystem;
 import org.usfirst.frc.team4213.systems.DriveSystem;
 import org.usfirst.frc.team4213.systems.FeederSystem;
@@ -12,6 +14,8 @@ import org.usfirst.frc.team4213.systems.GearIntakeSystem;
 import org.usfirst.frc.team4213.systems.RollerIntakeSystem;
 import org.usfirst.frc.team4213.systems.ShooterSystem;
 import org.usfirst.frc.team4213.systems.Subsystem;
+
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * Created by aaron on 11/21/16.
@@ -61,6 +65,8 @@ public class Robot extends MetalRobot {
     @Override
     public void robotInit() {
         registerTasks();
+        Compressor compressor = new Compressor();
+        compressor.start();
     }
     
     public void registerTasks() {

@@ -8,13 +8,17 @@ import edu.wpi.first.wpilibj.SpeedController;
 public enum Climber {
 	INSTANCE;
 	
-	private final SpeedController climberMotor; 
+	private final SpeedController climberFrontMotor; 
+	private final SpeedController climberBackMotor;
 	
 	private Climber() {
-		climberMotor = ComponentBuilder.buildMotor(MotorType.CANTALON, "climber.motor.channel", "climber.motor.reverse");
+		climberFrontMotor = ComponentBuilder.buildMotor(MotorType.CANTALON, "climber.motor.front.channel", "climber.motor.front.reverse");
+		climberBackMotor = ComponentBuilder.buildMotor(MotorType.CANTALON, "climber.motor.back.channel", "climber.motor.front.reverse");
+
 	}
 
 	public void setClimberSpeed(double speed){
-		climberMotor.set(speed);
+		climberFrontMotor.set(speed);
+		climberBackMotor.set(speed);
 	}
 }

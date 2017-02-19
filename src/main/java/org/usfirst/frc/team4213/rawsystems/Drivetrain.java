@@ -10,21 +10,27 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public enum Drivetrain {
 	INSTANCE;
 
-    private final CANTalon leftMotor, rightMotor;
+    private final CANTalon leftFrontMotor, leftBackMotor, rightFrontMotor, rightBackMotor;
     
     private final DoubleSolenoid brake; 
 
     private Drivetrain () {
-        leftMotor = (CANTalon)ComponentBuilder.buildMotor(MotorType.CANTALON, "left.motor.channel","left.motor.reverse");
-        rightMotor = (CANTalon)ComponentBuilder.buildMotor(MotorType.CANTALON, "right.motor.channel","right.motor.reverse");
+        leftFrontMotor = (CANTalon)ComponentBuilder.buildMotor(MotorType.CANTALON, "left.motor.front.channel","left.motor.front.reverse");
+        leftBackMotor = (CANTalon)ComponentBuilder.buildMotor(MotorType.CANTALON, "left.motor.back.channel","left.motor.back.reverse");
+
+        rightFrontMotor = (CANTalon)ComponentBuilder.buildMotor(MotorType.CANTALON, "right.motor.front.channel","right.motor.front.reverse");
+        rightBackMotor = (CANTalon)ComponentBuilder.buildMotor(MotorType.CANTALON, "right.motor.back.channel","right.motor.back.reverse");
+
         brake = ComponentBuilder.buildDoubleSolenoid("brake.solenoid.forward.channel", "brake.solenoid.reverse.channel");    }
 
     public void setLeftSpeed(double speed){
-    	leftMotor.set(speed);
+    	leftFrontMotor.set(speed);
+    	leftBackMotor.set(speed);
     }
     
     public void setRightSpeed(double speed){
-    	rightMotor.set(speed);
+    	rightFrontMotor.set(speed);
+    	rightBackMotor.set(speed);
     }
     
     public void setBrake(boolean open){
