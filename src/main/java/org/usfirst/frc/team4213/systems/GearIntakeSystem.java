@@ -16,7 +16,7 @@ public class GearIntakeSystem implements Subsystem{
 	private HoldState holdState;
 	 
 	public GearIntakeSystem(){
-		intakeState = IntakeState.OPEN;
+		intakeState = IntakeState.CLOSE;
 		holdState = HoldState.HOLD;
 	}
 	
@@ -40,22 +40,21 @@ public class GearIntakeSystem implements Subsystem{
 	public void run() {
 		
 		switch(intakeState){
-			case OPEN:
-				GearIntake.INSTANCE.setTopHingeOpen(true);
+		case OPEN: 
+			GearIntake.INSTANCE.setFronttHingeOpen(true);
 			break;
-			case CLOSE:
-				GearIntake.INSTANCE.setTopHingeOpen(false);
-			break;	
+		case CLOSE: 
+			GearIntake.INSTANCE.setFronttHingeOpen(false);
+			break;
 		}
 		
 		switch(holdState){
-			case HOLD: 
-				GearIntake.INSTANCE.setFronttHingeOpen(false);
-				break;
-			case DROP: 
-				GearIntake.INSTANCE.setFronttHingeOpen(true);
-				break;
-		
+		case HOLD:
+			GearIntake.INSTANCE.setTopHingeOpen(false);
+		break;
+		case DROP:
+			GearIntake.INSTANCE.setTopHingeOpen(true);
+		break;	
 		}
 		
 	}

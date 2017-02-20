@@ -49,6 +49,14 @@ public class DriverController implements Runnable {
 			mode = DriveMode.ARCADE;
 		}
 		
+		if(controller.getButton(GamepadButton.RT)){
+			driveSystem.ifPresent(DriveSystem::setFast);
+		}else if(controller.getButton(GamepadButton.LT)){
+			driveSystem.ifPresent(DriveSystem::setSlow);
+		}else {
+			driveSystem.ifPresent(DriveSystem::setNormal);
+		}
+		
 		DualDriveCommand command;
 		
 		switch(mode){

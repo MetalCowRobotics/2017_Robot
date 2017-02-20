@@ -97,12 +97,13 @@ public class OperatorController implements Runnable {
 	public void idleIntake(){
 		if (controller.getButton(GamepadButton.DPADUP)) {
 			rollerIntake.ifPresent(RollerIntakeSystem::idle);
-		} else if (controller.getButton(GamepadButton.RT)) {
+		} else if (controller.getButton(GamepadButton.DPADRIGHT)){
 			rollerIntake.ifPresent(RollerIntakeSystem::idle);
-		} else {
+		} else if (controller.getButton(GamepadButton.DPADLEFT)){
 			rollerIntake.ifPresent(RollerIntakeSystem::intake);
 		}
 	}
+	
 	
 	public void runSystems(){
 		gearIntake.ifPresent(Subsystem::run);

@@ -29,9 +29,9 @@ public enum GearIntake {
 	
 	public void setFronttHingeOpen(boolean open) {
 		if(open) {
-			frontHinge.set(Value.kReverse);
-		} else {
 			frontHinge.set(Value.kForward);
+		} else {
+			frontHinge.set(Value.kReverse);
 		}
 	}
 }

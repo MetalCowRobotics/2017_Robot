@@ -26,15 +26,15 @@ public class ShooterSystem implements Subsystem{
 //	boolean controlShooter;
 //	boolean controlHood;
 	
-//	ErrorController shooterTBH;
+	ErrorController shooterTBH;
 //	PIDController hoodPID;
 	
 	public ShooterSystem(){
 		state = State.IDLE;
 //		controlShooter = true;
 //		controlHood = true;
-//		double tbhKi = PropertyStore.INSTANCE.getDouble("shooter.tbh.ki");
-//		shooterTBH = new TBHController("Shooter",tbhKi);
+		double tbhKi = PropertyStore.INSTANCE.getDouble("shooter.tbh.ki");
+		shooterTBH = new TBHController("Shooter",tbhKi);
 //		double kp=1;
 //		double ki=0;
 //		double kd=0;
