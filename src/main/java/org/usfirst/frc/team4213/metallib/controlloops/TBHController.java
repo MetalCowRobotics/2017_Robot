@@ -6,12 +6,14 @@ public class TBHController extends ErrorController{
 	private double desiredRPS;
 	private double lastError;
 	private double ki;
+	private double kH;
 	
 	// Throw Half Back Controller ( Google The Name )
 	
-	public TBHController(String name, Double ki){
+	public TBHController(String name, Double ki, Double kh){
 		super(name);
-		this.ki = ki;
+		this.kH = kh;
+		this.ki = ki/1000;
 		lastPWM = 0;
 	}
 	public void setTarget(double rps){
@@ -27,7 +29,6 @@ public class TBHController extends ErrorController{
 		if(lastError == 0){
 			lastError =  desiredRPS - currentRPS;
 		}
-		
 
 		return computePower(currentRPS, currentPWM);
 	}
@@ -37,7 +38,7 @@ public class TBHController extends ErrorController{
 		final double newPWM;
 		
 		if(newError*lastError < 0){
-			newPWM = (currentPWM+lastPWM)/2;
+			newPWM = (currentPWM+lastPWM)/kH;
 		}else if(newError * lastError > 0){
 			newPWM = (lastError*ki) +currentPWM;
 		}else{

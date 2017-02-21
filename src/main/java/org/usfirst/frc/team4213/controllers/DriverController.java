@@ -16,7 +16,7 @@ import org.usfirst.frc.team4213.systems.DriveSystem;
 public class DriverController implements Runnable {
 
 	public enum DriveMode {
-		ARCADE, TANK;
+		ARCADE, TANK, DEVIN;
 	}
 	
     private static CowGamepad controller;
@@ -34,7 +34,7 @@ public class DriverController implements Runnable {
 	@Override
 	public void run() {
 		
-		double left = controller.getLY();
+		double left;
 		double right;
 		
 		if(controller.getButton(GamepadButton.A)){
@@ -47,11 +47,13 @@ public class DriverController implements Runnable {
 			mode = DriveMode.TANK;
 		}else if (controller.getButton(GamepadButton.DPADRIGHT)){
 			mode = DriveMode.ARCADE;
+		}else if (controller.getButton(GamepadButton.DPADUP)){
+			mode = DriveMode.DEVIN;
 		}
 		
-		if(controller.getButton(GamepadButton.RT)){
+		if(controller.getButton(GamepadButton.RB)){
 			driveSystem.ifPresent(DriveSystem::setFast);
-		}else if(controller.getButton(GamepadButton.LT)){
+		}else if(controller.getButton(GamepadButton.LB)){
 			driveSystem.ifPresent(DriveSystem::setSlow);
 		}else {
 			driveSystem.ifPresent(DriveSystem::setNormal);
@@ -61,11 +63,18 @@ public class DriverController implements Runnable {
 		
 		switch(mode){
 		case ARCADE:
+			left = controller.getLY();
 			right = controller.getRX();		
+			command = new ArcadeDriveCommand(left,right);
+			break;
+		case DEVIN:
+			left = ((Xbox360Controller)controller).getRT() - ((Xbox360Controller)controller).getLT();
+			right = controller.getLX();
 			command = new ArcadeDriveCommand(left,right);
 			break;
 		case TANK:
 		default:
+			left = controller.getLY();
 			right = controller.getRY();
 			command = new TankDriveCommand(left,right);
 		}
