@@ -8,6 +8,7 @@ import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
 import org.usfirst.frc.team4213.metallib.drives.ArcadeDriveCommand;
 import org.usfirst.frc.team4213.metallib.drives.DualDriveCommand;
 import org.usfirst.frc.team4213.metallib.drives.TankDriveCommand;
+import org.usfirst.frc.team4213.rawsystems.Drivetrain;
 import org.usfirst.frc.team4213.systems.DriveSystem;
 
 /**
@@ -33,7 +34,6 @@ public class DriverController implements Runnable {
 
 	@Override
 	public void run() {
-		
 		double left;
 		double right;
 		

@@ -11,6 +11,7 @@ import java.util.Vector;
 import java.util.stream.Stream;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * An ErrorController implemented with a simple
@@ -78,6 +79,10 @@ public class PIDController extends ErrorController {
 
 	
 	public double feedAndGetValue(double currentPosition, double currentVelocity) {		
+		kp = SmartDashboard.getNumber(name+".kp",kp);
+		ki = SmartDashboard.getNumber(name+".ki",ki);
+		kd = SmartDashboard.getNumber(name+".kd",kd);
+		integralLifespan = SmartDashboard.getNumber(name+".iLife",integralLifespan);
 		
 		positionData.addElement(new PositionDataPoint(currentPosition));
 		deleteOutdatedPoints();

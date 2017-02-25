@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4213;
 
+import org.usfirst.frc.team4213.controllers.AutonomousController;
 import org.usfirst.frc.team4213.controllers.DriverController;
 import org.usfirst.frc.team4213.controllers.OperatorController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
@@ -16,6 +17,7 @@ import org.usfirst.frc.team4213.systems.GearIntakeSystem;
 import org.usfirst.frc.team4213.systems.RollerIntakeSystem;
 import org.usfirst.frc.team4213.systems.ShooterSystem;
 import org.usfirst.frc.team4213.systems.Subsystem;
+
 
 
 
@@ -44,6 +46,7 @@ public class Robot extends MetalRobot {
 	// Controllers
 	DriverController driver;
 	OperatorController operator;
+	AutonomousController auto;
 	
 	{	
 		initGamepads();
@@ -54,7 +57,7 @@ public class Robot extends MetalRobot {
 		rollerIntake = initSubsystem(RollerIntakeSystem.class);
 		shooter = initSubsystem(ShooterSystem.class);
 		initControllers();
-		
+		//Drivetrain.INSTANCE.calibGyro();
 	}
 	
 	public void initGamepads(){
@@ -65,6 +68,7 @@ public class Robot extends MetalRobot {
 	public void initControllers(){
 		driver = new DriverController(driverGamepad,drivetrain);
 		operator = new OperatorController(operatorGamepad, climber, shooter, gearIntake, feeder, rollerIntake);
+		auto = new AutonomousController(drivetrain, shooter, gearIntake, feeder, rollerIntake);
 	}
 	
 	
@@ -78,7 +82,12 @@ public class Robot extends MetalRobot {
     public void registerTasks() {
     	addTask(RobotMode.TELEOP, driver);
     	addTask(RobotMode.TELEOP, operator);
-    	
+    	addTask(RobotMode.TEST, ()->{
+    		DriverStation.reportError("\n Right Pos : " + Drivetrain.INSTANCE.getRightPos() , false);
+    		DriverStation.reportError("\n Left Pos : " + Drivetrain.INSTANCE.getLeftPos() , false);
+
+    	});
+    	addTask(RobotMode.AUTO, auto);
     }
     
 	public <T extends Subsystem> T initSubsystem(Class<T> subsystem){
