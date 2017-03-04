@@ -10,20 +10,26 @@ import org.usfirst.frc.team4213.rawsystems.Drivetrain;
 public class DriveSystem implements Subsystem {
     
     public enum State {
-    	DRIVE,BRAKE;
+    	DRIVE, BRAKE;
+    }
+    
+    public enum DirectionState {
+    	FORWARD, REVERSE;
     }
     
     public enum Speed {
-    	SLOW,DEFAULT,FAST;
+    	SLOW, DEFAULT, FAST;
     }
     
     private State state;
+    private DirectionState direction;
     private Speed speed;
     
     DualDriveCommand command;
     
     public DriveSystem () {
     	state = State.DRIVE;
+    	direction = DirectionState.FORWARD;
     	speed = Speed.DEFAULT;
     }
     
@@ -38,7 +44,7 @@ public class DriveSystem implements Subsystem {
 	}
     
     private double scalePower(double power){
-    	for(int i = 0; i<2; i++){
+    	for(int i = 0; i < 2; i++){
     		power = scaleFunction(power);
     	}
     	return power;
@@ -50,6 +56,14 @@ public class DriveSystem implements Subsystem {
     
     public void brake(){
     	state = State.BRAKE;
+    }
+    
+    public void setFor() {
+    	direction = DirectionState.FORWARD;
+    }
+    
+    public void setRev() {
+    	direction = DirectionState.REVERSE;
     }
     
     public void setFast(){
@@ -68,7 +82,7 @@ public class DriveSystem implements Subsystem {
 	public void run() {	
 		
 		double multiplier;
-		switch(speed){
+		switch (speed) {
 		case SLOW:
 			multiplier = PropertyStore.INSTANCE.getDouble("drive.speed.slow");
 			break;
@@ -79,7 +93,17 @@ public class DriveSystem implements Subsystem {
 		default:
 			multiplier = PropertyStore.INSTANCE.getDouble("drive.speed.default");
 		}
-		switch(state){
+		
+		switch (direction) {
+		case FORWARD:
+			break;
+			
+		case REVERSE:
+			multiplier = -multiplier;
+			break;
+		}
+		
+		switch (state) {
 		case DRIVE:
 			double leftPower = scalePower(command.getLeftVoltage());
 			double rightPower = scalePower(command.getRightVoltage());
@@ -87,6 +111,7 @@ public class DriveSystem implements Subsystem {
 			Drivetrain.INSTANCE.setRightSpeed(rightPower*multiplier);
 			Drivetrain.INSTANCE.setBrake(false);
 			break;
+			
 		case BRAKE:
 			Drivetrain.INSTANCE.setLeftSpeed(0);
 			Drivetrain.INSTANCE.setRightSpeed(0);
@@ -94,6 +119,7 @@ public class DriveSystem implements Subsystem {
 			break;
 		}
 		
+	
 	}
 	
 }

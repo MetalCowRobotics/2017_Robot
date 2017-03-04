@@ -77,6 +77,7 @@ public class Robot extends MetalRobot {
         registerTasks();
         Compressor compressor = new Compressor();
         compressor.start();
+        
     }
     
     public void registerTasks() {
@@ -85,7 +86,6 @@ public class Robot extends MetalRobot {
     	addTask(RobotMode.TEST, ()->{
     		DriverStation.reportError("\n Right Pos : " + Drivetrain.INSTANCE.getRightPos() , false);
     		DriverStation.reportError("\n Left Pos : " + Drivetrain.INSTANCE.getLeftPos() , false);
-
     	});
     	addTask(RobotMode.AUTO, auto);
     }

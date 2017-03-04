@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 
  * @author hughest1
  */
-public class PIDController extends ErrorController {
+public class PIDController_Discrete extends ErrorController {
 
 	public double kp, ki, kd, integralLifespan;
 
@@ -44,7 +44,7 @@ public class PIDController extends ErrorController {
 		}
 	}
 
-	public PIDController(String name, double kp, double ki, double kd, double integralLifespan) {
+	public PIDController_Discrete(String name, double kp, double ki, double kd, double integralLifespan) {
 		super(name);
 		this.kp = kp;
 		this.ki = ki;
@@ -78,7 +78,7 @@ public class PIDController extends ErrorController {
 	}
 
 	
-	public double feedAndGetValue(double currentPosition, double currentVelocity) {		
+	public double feedAndGetValue(double currentPosition, double p2) {		
 		kp = SmartDashboard.getNumber(name+".kp",kp);
 		ki = SmartDashboard.getNumber(name+".ki",ki);
 		kd = SmartDashboard.getNumber(name+".kd",kd);
@@ -87,13 +87,20 @@ public class PIDController extends ErrorController {
 		positionData.addElement(new PositionDataPoint(currentPosition));
 		deleteOutdatedPoints();
 		
-		return computePID(currentPosition, computePositionIntegral(), currentVelocity);
+		return computePID(currentPosition, computePositionIntegral(), computePositionDerivative());
 		
 	}
 	
 	double computePID(double current, double integral, double derivative){
 		return (target - current) * kp / 1000 + integral * ki / 1000 + derivative * kd / 1000; 
 	}
+	
+//	double computePositionDerivative(){
+//		if(positionData.size() < 2){
+//			return 0;
+//		}
+//		return (positionData.get(positionData.size()-1).value-positionData.get(positionData.size()-2).value)/(positionData.get(positionData.size()-1).time.get()-positionData.get(positionData.size()-2).time.get());
+//	}
 	
 	double computePositionIntegral(){
 		
