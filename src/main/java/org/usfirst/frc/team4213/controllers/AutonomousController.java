@@ -2,7 +2,6 @@ package org.usfirst.frc.team4213.controllers;
 
 import java.util.Optional;
 
-import org.usfirst.frc.team4213.PIDController;
 import org.usfirst.frc.team4213.rawsystems.Drivetrain;
 import org.usfirst.frc.team4213.systems.DriveSystem;
 import org.usfirst.frc.team4213.systems.FeederSystem;
@@ -10,6 +9,7 @@ import org.usfirst.frc.team4213.systems.GearIntakeSystem;
 import org.usfirst.frc.team4213.systems.RollerIntakeSystem;
 import org.usfirst.frc.team4213.systems.ShooterSystem;
 import org.usfirst.frc.team4213.systems.Subsystem;
+import org.usfirst.frc.team4213.metallib.controlloops.PIDController;
 import org.usfirst.frc.team4213.metallib.drives.TankDriveCommand;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,9 +23,9 @@ public class AutonomousController implements Runnable{
 	private static Optional<RollerIntakeSystem> rollerIntake;
 	double pulsePerRev = 1440;
 	int currentState = 3;
-	PIDController leftWheel = new PIDController("wheel", 20,0,0,1);
-	PIDController rightWheel = new PIDController("wheel", 20,0,0,1);
-	PIDController angleController = new PIDController("angle", 5, 0, 0,1);
+	PIDController leftWheel = new PIDController("wheel", 20,0,0,1, false);
+	PIDController rightWheel = new PIDController("wheel", 20,0,0,1, false);
+	PIDController angleController = new PIDController("angle", 5, 0, 0,1, true);
 	double startLPos;
 	double startRPos;
 	public AutonomousController(DriveSystem driveSystem, ShooterSystem shooter, GearIntakeSystem gearIntake, FeederSystem feeder, RollerIntakeSystem rollerIntake){
