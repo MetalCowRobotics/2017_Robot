@@ -83,6 +83,7 @@ public class Robot extends MetalRobot {
         registerTasks();
         Compressor compressor = new Compressor();
         compressor.start();
+        //Drivetrain.INSTANCE.calibGyro();
     }
     
     public void registerTasks() {

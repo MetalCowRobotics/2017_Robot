@@ -45,9 +45,9 @@ public class OperatorController implements Runnable {
 	
 	public void topIntake() {
 		if (controller.getButton(GamepadButton.LB)) {
-			gearIntake.ifPresent(GearIntakeSystem::openTop);
-		} else {
 			gearIntake.ifPresent(GearIntakeSystem::closeTop);
+		} else {
+			gearIntake.ifPresent(GearIntakeSystem::openTop);
 		}
 	}
 	
