@@ -58,11 +58,11 @@ public class DriveSystem implements Subsystem {
     	state = State.BRAKE;
     }
     
-    public void setFor() {
+    public void setForward() {
     	direction = DirectionState.FORWARD;
     }
     
-    public void setRev() {
+    public void setReverse() {
     	direction = DirectionState.REVERSE;
     }
     

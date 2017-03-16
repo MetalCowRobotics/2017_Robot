@@ -23,9 +23,9 @@ public class AutonomousController implements Runnable{
 	private static Optional<RollerIntakeSystem> rollerIntake;
 	double pulsePerRev = 1440;
 	int currentState = 3;
-	PIDController leftWheel = new PIDController("wheel", 20,0,0,1);
-	PIDController rightWheel = new PIDController("wheel", 20,0,0,1);
-	PIDController angleController = new PIDController("angle", 5, 0, 0,1);
+	PIDController leftWheel = new PIDController("wheel", 20,0,0,1, false);
+	PIDController rightWheel = new PIDController("wheel", 20,0,0,1, false);
+	PIDController angleController = new PIDController("angle", 5, 0, 0,1, true);
 	double startLPos;
 	double startRPos;
 	public AutonomousController(DriveSystem driveSystem, ShooterSystem shooter, GearIntakeSystem gearIntake, FeederSystem feeder, RollerIntakeSystem rollerIntake){

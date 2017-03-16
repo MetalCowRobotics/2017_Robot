@@ -44,7 +44,14 @@ public abstract class MetalRobot extends RobotBase {
 		FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
 		robotInit();
 		runModeChecker();
-		Thread.currentThread().suspend();
+		while(true){
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public abstract void robotInit();

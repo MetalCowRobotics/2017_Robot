@@ -9,6 +9,7 @@ package org.usfirst.frc.team4213;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,7 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class PIDController extends ErrorController {
 
 	public double kp, ki, kd, integralLifespan;
-
+	public boolean tuneable;
+	
 	// Previous position data
 	Vector<PositionDataPoint> positionData = new Vector<PositionDataPoint>();
 
@@ -34,12 +36,13 @@ public class PIDController extends ErrorController {
 	}
 
 
-	public PIDController(String name, double kp, double ki, double kd, double integralLifespan) {
+	public PIDController(String name, double kp, double ki, double kd, double integralLifespan,boolean tuneable) {
 		super(name);
 		this.kp = kp;
 		this.ki = ki;
 		this.integralLifespan = integralLifespan;
 		this.kd = kd;
+		this.tuneable = tuneable;
 		positionData.add(new PositionDataPoint(0));
 	}
 	
@@ -70,19 +73,27 @@ public class PIDController extends ErrorController {
 	@Override
 	public double feedAndGetValue(double currentValue) {
 		// Read constants values off of the CowDash
-		
-		kp = SmartDashboard.getNumber(name+".kp",kp);
-		ki = SmartDashboard.getNumber(name+".ki",ki);
-		kd = SmartDashboard.getNumber(name+".kd",kd);
-		integralLifespan = SmartDashboard.getNumber(name+".iLife",integralLifespan);
+		double newKp = kp/1000.0;
+		double newKi = ki/1000.0;
+		double newKd = kd/1000.0;
+		if(tuneable){
+			newKp = Preferences.getInstance().getDouble(name+".kp",kp)/1000.0;
+			newKi = Preferences.getInstance().getDouble(name+".ki",ki)/1000.0;
+			newKd = Preferences.getInstance().getDouble(name+".kd",kd)/1000.0;
+			integralLifespan = Preferences.getInstance().getDouble(name+".iLife",integralLifespan);
+		}
 
+//		System.out.println(name + " kp is " + newKp);
+//		System.out.println(name + " ki is " + newKi);
+//		System.out.println(name + " kd is " + newKd);
+//		System.out.println(name + " life is " + integralLifespan);
 		// Current error is target minus current value
 		PositionDataPoint thisValue = new PositionDataPoint(currentValue);
 
 		double integral = 0;
 		double derivative = 0;
 		// If we have data on the past, integral and derivative can be computed.
-		if (positionData.size() > 0) {
+		if (positionData.size() > 2) {
 			// Compute integral by summing up all errors contained within the
 			// positionData, weighted by time inbetween each.
 			Enumeration<PositionDataPoint> e = positionData.elements();
@@ -106,7 +117,7 @@ public class PIDController extends ErrorController {
 
 		// Log info about the integral and derivative
 		// Return summed terms: Proportional, Integral, Derivative
-		return (target - thisValue.value) * kp / 1000 + integral * ki / 1000 + derivative * kd / 1000;
+		return (target - thisValue.value) * newKp + integral * newKi + derivative * newKd;
 
 	}
 }

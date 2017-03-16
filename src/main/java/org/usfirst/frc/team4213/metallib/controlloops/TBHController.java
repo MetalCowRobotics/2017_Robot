@@ -1,20 +1,25 @@
 package org.usfirst.frc.team4213.metallib.controlloops;
 
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
 public class TBHController extends ErrorController{
 	
-	private double lastPWM;
+	private double H0;
 	private double desiredRPS;
 	private double lastError;
+	private double lastPWM;
 	private double ki;
-	private double kH;
-	
+//	private double kh;
+	boolean tuneable;
 	// Throw Half Back Controller ( Google The Name )
 	
-	public TBHController(String name, Double ki, Double kh){
+	public TBHController(String name, Double ki, boolean tuneable){
 		super(name);
-		this.kH = kh;
-		this.ki = ki/1000;
-		lastPWM = 0;
+		this.ki = ki;
+		this.tuneable = tuneable;
+		H0 = 0;
 	}
 	public void setTarget(double rps){
 		desiredRPS = rps;
@@ -34,20 +39,36 @@ public class TBHController extends ErrorController{
 	}
 	
 	double computePower(double currentRPS, double currentPWM){
-		final double newError = desiredRPS - currentRPS;
-		final double newPWM;
 		
-		if(newError*lastError < 0){
-			newPWM = (currentPWM+lastPWM)/kH;
-		}else if(newError * lastError > 0){
-			newPWM = (lastError*ki) +currentPWM;
-		}else{
-			newPWM = currentPWM;
+		double newKi = ki/1000.0;
+		if(tuneable){
+			newKi = Preferences.getInstance().getDouble(name + ".ki",ki)/1000.0;
 		}
-
-		lastError = newError;
+		System.out.println("KI IS " + newKi);
+		final double newError = desiredRPS - currentRPS;
+		
+		double output = lastPWM + (newKi*newError);
+		
+		if(Math.signum(newError) != Math.signum(lastError)){
+			H0 = output = (output + H0) / 2;
+		}
+//		double newPWM=H0;
+//		final double newKh =  SmartDashboard.getNumber(name + ".kh",kh)/100.0;
+//		System.out.println("kh is" + newKh);
+//				
+//		newPWM+=newError*newKi;
+//		if(newError*lastError < 0){
+//			newPWM = (H0+newPWM)/newKh;
+//			H0 = newPWM;
+//		}
+//		
+//		currentPWM=newPWM;
+//		return newPWM;
+		
 		lastPWM = currentPWM;
-		return newPWM;
+		lastError = newError;
+		
+		return output;
 	}
 	
 }

@@ -62,9 +62,9 @@ public class DriverController implements Runnable {
 		}
 		
 		if (controller.getButtonToggled(GamepadButton.X)) {
-			driveSystem.ifPresent(DriveSystem::setFor);
+			driveSystem.ifPresent(DriveSystem::setForward);
 		} else {
-			driveSystem.ifPresent(DriveSystem::setRev);
+			driveSystem.ifPresent(DriveSystem::setReverse);
 		}
 		
 		DualDriveCommand command;

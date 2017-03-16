@@ -3,6 +3,7 @@ package org.usfirst.frc.team4213;
 import org.usfirst.frc.team4213.controllers.AutonomousController;
 import org.usfirst.frc.team4213.controllers.DriverController;
 import org.usfirst.frc.team4213.controllers.OperatorController;
+import org.usfirst.frc.team4213.controllers.TestController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
 import org.usfirst.frc.team4213.metallib.controllers.AIRFLOController;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
@@ -17,6 +18,7 @@ import org.usfirst.frc.team4213.systems.GearIntakeSystem;
 import org.usfirst.frc.team4213.systems.RollerIntakeSystem;
 import org.usfirst.frc.team4213.systems.ShooterSystem;
 import org.usfirst.frc.team4213.systems.Subsystem;
+
 
 
 
@@ -47,6 +49,7 @@ public class Robot extends MetalRobot {
 	DriverController driver;
 	OperatorController operator;
 	AutonomousController auto;
+	TestController test;
 	
 	{	
 		initGamepads();
@@ -74,19 +77,16 @@ public class Robot extends MetalRobot {
 	
     @Override
     public void robotInit() {
+		test = new TestController(driverGamepad, operatorGamepad);
         registerTasks();
         Compressor compressor = new Compressor();
         compressor.start();
-        
     }
     
     public void registerTasks() {
     	addTask(RobotMode.TELEOP, driver);
     	addTask(RobotMode.TELEOP, operator);
-    	addTask(RobotMode.TEST, ()->{
-    		DriverStation.reportError("\n Right Pos : " + Drivetrain.INSTANCE.getRightPos() , false);
-    		DriverStation.reportError("\n Left Pos : " + Drivetrain.INSTANCE.getLeftPos() , false);
-    	});
+    	addTask(RobotMode.TEST, test);
     	addTask(RobotMode.AUTO, auto);
     }
     
