@@ -4,8 +4,18 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public abstract class CowGamepad extends Joystick {
 
+	boolean[] previousStates;
+	boolean[] toggleStates;
+	
 	public CowGamepad(int port) {
 		super(port);
+		previousStates = new boolean[20];
+		toggleStates   = new boolean[20];
+		
+		for (short i = 0; i < 20; i++){
+			previousStates[i] = false;
+			toggleStates[i]   = false;
+		}
 	}
 
 	public abstract boolean getButton(int n);
@@ -95,5 +105,62 @@ public abstract class CowGamepad extends Joystick {
 	}
 
 	public void rumbleRight(float amt) {
+	}
+	
+	public boolean getHeadingPadPressed() {
+		return getRawButton(1) || getRawButton(2) || getRawButton(3) || getRawButton(4);
+	}
+	
+	public double getHeadingPadDirection() {
+		float x = 0, y = 0;
+		if (getRawButton(1)) y -= 1;
+		if (getRawButton(2)) x += 1;
+		if (getRawButton(3)) x -= 1;
+		if (getRawButton(4)) y += 1;
+		return Math.toDegrees(Math.atan2(x, y));
+	}
+	
+	public boolean getButtonTripped(int n) {
+		if (getButton(n)) {
+			if (previousStates[n]) {
+				previousStates[n] = true;
+				return false;
+			} else {
+				previousStates[n] = true;
+				return true;
+			}
+			
+		} else {
+			previousStates[n] = false;
+			return false;
+		}
+	}
+	
+	public boolean getButtonReleased(int n) {
+		if (!getButton(n)) {
+			if (previousStates[n]) {
+				previousStates[n] = false;
+				return true;
+			} else {
+				previousStates[n] = false;
+				return false;
+			}
+			
+		} else {
+			previousStates[n] = true;
+			return false;
+		}
+	}
+	
+	public boolean getButtonToggled(int n) {
+		if (!getButton(n)) {
+			previousStates[n] = false;
+		} else if(previousStates[n]) {
+			previousStates[n] = true;
+		} else {
+			previousStates[n] = true;
+			toggleStates[n] = !toggleStates[n];
+		}
+		return toggleStates[n];
 	}
 }
