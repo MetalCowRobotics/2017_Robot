@@ -84,6 +84,9 @@ public class DriverController implements Runnable {
 		default:
 			left  = controller.getLY();
 			right = controller.getRY();
+			if(controller.getButton(GamepadButton.A)){
+				right = left;
+			}
 			command = new TankDriveCommand(left, right);
 		}
 		
