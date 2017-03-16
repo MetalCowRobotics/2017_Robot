@@ -4,11 +4,10 @@ import org.usfirst.frc.team4213.metallib.controlloops.ErrorController;
 import org.usfirst.frc.team4213.metallib.controlloops.PIDController;
 import org.usfirst.frc.team4213.metallib.controlloops.TBHController;
 import org.usfirst.frc.team4213.metallib.util.PropertyStore;
-import org.usfirst.frc.team4213.metallib.util.SmartDashStore;
 import org.usfirst.frc.team4213.rawsystems.Shooter;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSystem implements Subsystem{
@@ -23,33 +22,22 @@ public class ShooterSystem implements Subsystem{
 	
 	HoodState hoodState;
 	State state;
-	
-	double defaultHoodSpeed;
-	
-	double defaultRunSpeed;
-	Encoder test;
-	
-	boolean controlShooter;
-//	boolean controlHood;
-	
-	ErrorController shooterTBH;
-//	PIDController hoodPID;
+			
+	TBHController shooterTBH;
+	PIDController hoodPID;
 	
 	public ShooterSystem(){
 		state = State.IDLE;
-		controlShooter = true;
-//		controlHood = true;
+		hoodState = HoodState.IDLE;
+		
 		double tbhKi = PropertyStore.INSTANCE.getDouble("shooter.tbh.ki");
-		double tbhKh = PropertyStore.INSTANCE.getDouble("shooter.tbh.kh");
-		shooterTBH = new TBHController("shooter",tbhKi, tbhKh);
-//		double kp=1;
-//		double ki=0;
-//		double kd=0;
-//		double kiLife = 1;
-//		hoodPID = new PIDController("Hood",kp,ki,kd,kiLife);
-		test = new Encoder(0,1);
-		defaultRunSpeed = PropertyStore.INSTANCE.getDouble("shooter.defaultspeed");
-		defaultHoodSpeed = PropertyStore.INSTANCE.getDouble("hood.defaultspeed");
+		shooterTBH = new TBHController("shooter",tbhKi, false);
+		
+		double hoodKp = PropertyStore.INSTANCE.getDouble("hood.kp");
+		double hoodKi = PropertyStore.INSTANCE.getDouble("hood.ki");
+		double hoodKd = PropertyStore.INSTANCE.getDouble("hood.kd");
+		double hoodILife = PropertyStore.INSTANCE.getDouble("hood.ilife");
+		hoodPID = new PIDController("hood",hoodKp,hoodKi,hoodKd,hoodILife,false);
 	}
 	
 	double getDesiredFlywheelSpeed(){
@@ -57,23 +45,25 @@ public class ShooterSystem implements Subsystem{
 	}
 	
 	double getFlywheelSpeed(){
-		return  (1.0/100.0) / test.getPeriod();
+		return  (1.0/100.0) / Shooter.INSTANCE.getFlywheelEncPeriod();
 	}
 	
+	
 	void runShooterSpeedLoop(){
-		//final double rps = Shooter.INSTANCE.getFlywheelSpeed();
-		double rps = getFlywheelSpeed();
+		final double rps = getFlywheelSpeed();
 		final double pwm = Shooter.INSTANCE.getShooterPower();
 		final double power = shooterTBH.feedAndGetValue(rps,pwm);
 		Shooter.INSTANCE.setFlywheelSpeed(power);
 	}
 	
-//	void runHoodPIDLoop(){
-//		final double pos = Shooter.INSTANCE.getFlywheelEncoderPosition();
-//		final double vel = Shooter.INSTANCE.getFlywheelSpeed();
-//		final double power = hoodPID.feedAndGetValue(pos, vel);
-//		Shooter.INSTANCE.setHoodSpeed(power);
-//	}
+	void runHoodPIDLoop(){
+		final double target = SmartDashboard.getNumber("shooter.hoodtarget",0);
+		hoodPID.setTarget(target);
+		final double position = Shooter.INSTANCE.getHoodEncoderPosition();
+		SmartDashboard.putNumber("shooter.hoodposition", position);
+		final double outputPWM = hoodPID.feedAndGetValue(position);
+		Shooter.INSTANCE.setHoodSpeed(outputPWM);
+	}
 
 	public void bumpUp(){
 		hoodState = HoodState.BUMPINGUP;
@@ -94,9 +84,10 @@ public class ShooterSystem implements Subsystem{
 	public void idle(){
 		state = State.IDLE;
 	}
-//	public void bumpHoodAngle(double angle) {
-//		hoodPID.bumpTarget(angle);
-//	}
+	public void bumpHoodAngle(double angle) {
+		hoodPID.bumpTarget(angle);
+		SmartDashboard.putNumber("shooter.hoodtarget", hoodPID.target);
+	}
 	
 	@Override
 	public void run() {
@@ -107,28 +98,26 @@ public class ShooterSystem implements Subsystem{
 	    	break; 
 	    case SHOOTING:
 	    	shooterTBH.setTarget(getDesiredFlywheelSpeed());
-	    	System.out.println("Current Wheel Speed : " + getFlywheelSpeed() );
+	    	SmartDashboard.putNumber("shooter.currentspeed", getFlywheelSpeed());
 		    break;
 		}
 		
+		
+		
 		switch(hoodState){
-		case IDLE:
-			Shooter.INSTANCE.setHoodSpeed(0);
-			break;
 		case BUMPINGUP:
-			Shooter.INSTANCE.setHoodSpeed(defaultHoodSpeed);
+			bumpHoodAngle(1);
 			break;
 		case BUMPINGDOWN:
-			Shooter.INSTANCE.setHoodSpeed(-defaultHoodSpeed);
+			bumpHoodAngle(-1);
+			break;
+		default:
 			break;
 		}
 		
-		if(controlShooter){
-			runShooterSpeedLoop();
-		}
-//		if(controlHood){
-//			runHoodPIDLoop();
-//		}
+		runShooterSpeedLoop();
+		runHoodPIDLoop();
+
 	}
 	
 }
