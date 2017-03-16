@@ -43,7 +43,7 @@ public class OperatorController implements Runnable {
 	}
 	
 	
-	public void topIntake(){
+	public void topIntake() {
 		if (controller.getButton(GamepadButton.LB)) {
 			gearIntake.ifPresent(GearIntakeSystem::openTop);
 		} else {
@@ -51,15 +51,18 @@ public class OperatorController implements Runnable {
 		}
 	}
 	
-	public void climb(){
-		if (controller.getButton(GamepadButton.DPADUP)) {
+	public void climb() {
+		if (controller.getButton(GamepadButton.DPADUP) ||
+			controller.getButton(GamepadButton.DPADDOWN) ||
+			controller.getButton(GamepadButton.DPADLEFT) ||
+			controller.getButton(GamepadButton.DPADRIGHT)) {
 			climber.ifPresent(ClimberSystem::climb);
 		} else {
 			climber.ifPresent(ClimberSystem::idle);
 		}
 	}
 	
-	public void gearHold(){
+	public void gearHold() {
 		if (controller.getButton(GamepadButton.LT)) {
 			gearIntake.ifPresent(GearIntakeSystem::dropGear);
 		} else {
@@ -75,12 +78,12 @@ public class OperatorController implements Runnable {
 		else if (controller.getButton(GamepadButton.A)) {
 			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(-0.5));
 			shooter.ifPresent(ShooterSystem::bumpDown);
-		}else {
+		} else {
 			shooter.ifPresent(ShooterSystem::noBump);
 		}
 	}
 	
-	public void shoot(){
+	public void shoot() {
 		if (controller.getButton(GamepadButton.RT)) {
 			shooter.ifPresent(ShooterSystem::shoot);
 			if (controller.getButton(GamepadButton.RB)) {
@@ -94,24 +97,20 @@ public class OperatorController implements Runnable {
 		}
 	}
 	
-	public void idleIntake(){
-		if (controller.getButton(GamepadButton.DPADUP)) {
+	public void idleIntake() {
+		if (controller.getButton(GamepadButton.X)) {
 			rollerIntake.ifPresent(RollerIntakeSystem::idle);
-		} else if (controller.getButton(GamepadButton.DPADRIGHT)){
-			rollerIntake.ifPresent(RollerIntakeSystem::idle);
-		} else if (controller.getButton(GamepadButton.DPADLEFT)){
+		} else if (controller.getButton(GamepadButton.Y)) {
 			rollerIntake.ifPresent(RollerIntakeSystem::intake);
 		}
 	}
 	
 	
-	public void runSystems(){
+	public void runSystems() {
 		gearIntake.ifPresent(Subsystem::run);
 		shooter.ifPresent(Subsystem::run);
 		climber.ifPresent(Subsystem::run);
 		rollerIntake.ifPresent(Subsystem::run);
 		feeder.ifPresent(Subsystem::run);
-		
 	}
-
 }
