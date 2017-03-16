@@ -8,49 +8,42 @@ package org.usfirst.frc.team4213.metallib.controlloops;
 
 import java.util.Enumeration;
 import java.util.Vector;
-import java.util.stream.Stream;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * An ErrorController implemented with a simple
- * Proportional-(limited)Integral-Derivative controller
- * 
- * @author hughest1
- */
+
 public class PIDController extends ErrorController {
 
 	public double kp, ki, kd, integralLifespan;
-
+	public boolean tuneable;
+	
 	// Previous position data
 	Vector<PositionDataPoint> positionData = new Vector<PositionDataPoint>();
 
 	// One of the data points for positions
-	class PositionDataPoint {
+	private class PositionDataPoint {
 		public double value;
 		public Timer time;
 
-		/**
-		 * Creates a new PositionDataPoint and starts its timer.
-		 * 
-		 * @param val
-		 *            the value at time of creation
-		 */
 		public PositionDataPoint(double val) {
 			this.value = val;
 			time = new Timer();
+			time.reset();
 			time.start();
 		}
 	}
 
-	public PIDController(String name, double kp, double ki, double kd, double integralLifespan) {
+
+	public PIDController(String name, double kp, double ki, double kd, double integralLifespan,boolean tuneable) {
 		super(name);
 		this.kp = kp;
 		this.ki = ki;
 		this.integralLifespan = integralLifespan;
 		this.kd = kd;
-		positionData.addElement(new PositionDataPoint(0));
+		this.tuneable = tuneable;
+		positionData.add(new PositionDataPoint(0));
 	}
 	
 	public double getTarget(){
@@ -63,7 +56,7 @@ public class PIDController extends ErrorController {
 	
 	public double getError() {
 		try{
-			return target-((PositionDataPoint)positionData.lastElement()).value;
+			return target-positionData.lastElement().value;
 		} catch(Exception e){
 			return 0;
 		}
@@ -77,53 +70,54 @@ public class PIDController extends ErrorController {
 		positionData = new Vector<PositionDataPoint>();
 	}
 
-	
-	public double feedAndGetValue(double currentPosition, double currentVelocity) {		
-		kp = SmartDashboard.getNumber(name+".kp",kp);
-		ki = SmartDashboard.getNumber(name+".ki",ki);
-		kd = SmartDashboard.getNumber(name+".kd",kd);
-		integralLifespan = SmartDashboard.getNumber(name+".iLife",integralLifespan);
-		
-		positionData.addElement(new PositionDataPoint(currentPosition));
-		deleteOutdatedPoints();
-		
-		return computePID(currentPosition, computePositionIntegral(), currentVelocity);
-		
-	}
-	
-	double computePID(double current, double integral, double derivative){
-		return (target - current) * kp / 1000 + integral * ki / 1000 + derivative * kd / 1000; 
-	}
-	
-	double computePositionIntegral(){
-		
-		if(positionData.size() < 2){
-			return 0;
+	@Override
+	public double feedAndGetValue(double currentValue) {
+		// Read constants values off of the CowDash
+		double newKp = kp/1000.0;
+		double newKi = ki/1000.0;
+		double newKd = kd/1000.0;
+		if(tuneable){
+			newKp = Preferences.getInstance().getDouble(name+".kp",kp)/1000.0;
+			newKi = Preferences.getInstance().getDouble(name+".ki",ki)/1000.0;
+			newKd = Preferences.getInstance().getDouble(name+".kd",kd)/1000.0;
+			integralLifespan = Preferences.getInstance().getDouble(name+".iLife",integralLifespan);
 		}
-		
-		final PositionDataPoint lastPosition = positionData.firstElement();
-		return positionData.stream()
-					.mapToDouble((position)-> {
-						return (target - position.value) * (lastPosition.time.get() - position.time.get());
-					})
-					.sum();
-	}
-	
-	double computePositionDerivative(){
-		
-		if(positionData.size() < 2){
-			return 0;
+
+//		System.out.println(name + " kp is " + newKp);
+//		System.out.println(name + " ki is " + newKi);
+//		System.out.println(name + " kd is " + newKd);
+//		System.out.println(name + " life is " + integralLifespan);
+		// Current error is target minus current value
+		PositionDataPoint thisValue = new PositionDataPoint(currentValue);
+
+		double integral = 0;
+		double derivative = 0;
+		// If we have data on the past, integral and derivative can be computed.
+		if (positionData.size() > 2) {
+			// Compute integral by summing up all errors contained within the
+			// positionData, weighted by time inbetween each.
+			Enumeration<PositionDataPoint> e = positionData.elements();
+			PositionDataPoint lastElement = e.nextElement();
+			while (e.hasMoreElements()) {
+				PositionDataPoint currentElement = e.nextElement();
+				integral += (target - currentElement.value) * (lastElement.time.get() - currentElement.time.get());
+			}
+
+			// Compute derivative by subtracting current value from last
+			// recorded, divided by time inbetween.
+			PositionDataPoint lastData = positionData.lastElement();
+			derivative = (lastData.value - thisValue.value) / lastData.time.get();
 		}
-		
-		final PositionDataPoint secondLastPoint = positionData.get(positionData.size());
-		final PositionDataPoint lastPoint = positionData.lastElement();
-		return (secondLastPoint.value - lastPoint.value) / secondLastPoint.time.get();
-	}
-	
-	void deleteOutdatedPoints(){
-			positionData.removeIf((point)->{
-				return point.time.get() > integralLifespan;
-			});
-				
+
+		// Add this data point to the position data history
+		positionData.addElement(thisValue);
+		// Trim old entries from the position data history
+		while (positionData.firstElement().time.get() > integralLifespan)
+			positionData.removeElementAt(0);
+
+		// Log info about the integral and derivative
+		// Return summed terms: Proportional, Integral, Derivative
+		return (target - thisValue.value) * newKp + integral * newKi + derivative * newKd;
+
 	}
 }
