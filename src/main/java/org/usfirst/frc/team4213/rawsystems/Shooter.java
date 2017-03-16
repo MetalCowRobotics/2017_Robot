@@ -2,22 +2,26 @@ package org.usfirst.frc.team4213.rawsystems;
 
 import org.usfirst.frc.team4213.metallib.ComponentBuilder;
 import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
+import org.usfirst.frc.team4213.metallib.util.PropertyStore;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedController;
 
 public enum Shooter {
 
 	INSTANCE;
 	
-	private final CANTalon flywheelMotor, hoodMotor; 
+	private final SpeedController flywheelMotor, hoodMotor; 
 	
-	//private final Encoder flywheelEncoder;
+	private final Encoder hoodEncoder, flywheelEncoder;
 	
 	private Shooter() {
-		flywheelMotor = (CANTalon) ComponentBuilder.buildMotor(MotorType.CANTALON, "flywheel.motor.channel", "flywheel.motor.reverse");
-		hoodMotor = (CANTalon) ComponentBuilder.buildMotor(MotorType.CANTALON, "hood.motor.channel", "hood.motor.reverse");
-		//flywheelEncoder = new Encoder(0,1);
+		flywheelMotor = ComponentBuilder.buildMotor(MotorType.JAGUAR, "flywheel.motor.channel", "flywheel.motor.reverse");
+		hoodMotor = ComponentBuilder.buildMotor(MotorType.JAGUAR, "hood.motor.channel", "hood.motor.reverse");
+		hoodEncoder = new Encoder(4,5);
+		hoodEncoder.setDistancePerPulse(1/PropertyStore.INSTANCE.getDouble("hood.cpd"));
+		flywheelEncoder = new Encoder(0,1);
 		//flywheelEncoder.setDistancePerPulse(1/100);
 	}
 	public void setFlywheelSpeed(double speed){
@@ -28,21 +32,25 @@ public enum Shooter {
 		hoodMotor.set(speed);
 	}
 	
-//	public double getFlywheelEncoderPosition(){
-//		return flywheelEncoder.getDistance();
-//	}
+	public double getFlywheelEncoderPosition(){
+		return flywheelEncoder.getDistance();
+	}
 //	
-//	public double getHoodEncoderPosition(){
-//		return hoodMotor.getEncPosition();
-//	}
+	public double getHoodEncoderPosition(){
+		return hoodEncoder.getDistance();
+	}
 //	
-//	public double getFlywheelSpeed(){
-//		return flywheelEncoder.getRate();
-//	}
+	public double getFlywheelSpeed(){
+		return flywheelEncoder.getRate();
+	}
 //	
-//	public double getHoodSpeed(){
-//		return hoodMotor.getEncVelocity();
-//	}
+	
+	public double getFlywheelEncPeriod(){
+		return flywheelEncoder.getPeriod();
+	}
+	public double getHoodSpeed(){
+		return hoodEncoder.getRate();
+	}
 	
 	public double getShooterPower(){
 		return flywheelMotor.get();
