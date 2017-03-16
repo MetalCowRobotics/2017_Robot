@@ -12,15 +12,15 @@ public class TestController implements Runnable {
 	
 	CowGamepad driver;
 	CowGamepad operator;
-	ADXRS450_Gyro imu;
 	
 	public TestController(CowGamepad driver, CowGamepad operator){
 		this.driver = driver;
 		this.operator = operator;
-		imu = new ADXRS450_Gyro();
 	}
 	
 	@Override
 	public void run() {
+		System.out.println("Hood Speed is 8");
+		Shooter.INSTANCE.setHoodSpeed(0.8);
 	}
 }

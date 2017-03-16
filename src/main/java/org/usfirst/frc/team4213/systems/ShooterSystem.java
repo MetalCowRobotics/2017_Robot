@@ -17,7 +17,7 @@ public class ShooterSystem implements Subsystem{
 	}
 	
 	public enum HoodState{
-		IDLE,BUMPINGUP, BUMPINGDOWN;
+		DEFAULT, UP;
 	}
 	
 	HoodState hoodState;
@@ -26,9 +26,13 @@ public class ShooterSystem implements Subsystem{
 	TBHController shooterTBH;
 	PIDController hoodPID;
 	
+	double runSpeed = 0;
+	
+	double hoodSpeed = 0;
+	
 	public ShooterSystem(){
 		state = State.IDLE;
-		hoodState = HoodState.IDLE;
+		hoodState = HoodState.DEFAULT;
 		
 		double tbhKi = PropertyStore.INSTANCE.getDouble("shooter.tbh.ki");
 		shooterTBH = new TBHController("shooter",tbhKi, false);
@@ -65,17 +69,14 @@ public class ShooterSystem implements Subsystem{
 		Shooter.INSTANCE.setHoodSpeed(outputPWM);
 	}
 
-	public void bumpUp(){
-		hoodState = HoodState.BUMPINGUP;
+	public void setDefault(){
+		hoodState = HoodState.DEFAULT;
 	}
 	
-	public void bumpDown(){
-		hoodState = HoodState.BUMPINGDOWN;
+	public void setRaised(){
+		hoodState = HoodState.UP;
 	}
 	
-	public void noBump(){
-		hoodState = HoodState.IDLE;
-	}
 	
 	public void shoot(){
 		state = State.SHOOTING;
@@ -89,34 +90,41 @@ public class ShooterSystem implements Subsystem{
 		SmartDashboard.putNumber("shooter.hoodtarget", hoodPID.target);
 	}
 	
+	public void setHoodSpeed(double speed){
+		hoodSpeed = speed;
+	}
+	
 	@Override
 	public void run() {
+//		switch(hoodState){
+//		case DEFAULT:
+//			hoodPID.setTarget(0);
+//			runSpeed = Preferences.getInstance().getDouble("Shooter_Default_Run_Speed",1300);
+//			break;
+//		case UP:
+//			double target = Preferences.getInstance().getDouble("Shooter_Up_Target", 5);
+//			hoodPID.setTarget(target);
+//			
+//			break;
+//		default:
+//			break;
+//		}
+		Shooter.INSTANCE.setHoodSpeed(hoodSpeed);
+		
 		switch(state){ 
 	    case IDLE:  
 	    	shooterTBH.setTarget(0);
 	    	Shooter.INSTANCE.setFlywheelSpeed(0);
 	    	break; 
 	    case SHOOTING:
-	    	shooterTBH.setTarget(getDesiredFlywheelSpeed());
+	    	runSpeed = Preferences.getInstance().getDouble("Shooter_Up_Speed", 1500);
+	    	shooterTBH.setTarget(runSpeed);
 	    	SmartDashboard.putNumber("shooter.currentspeed", getFlywheelSpeed());
 		    break;
 		}
 		
-		
-		
-		switch(hoodState){
-		case BUMPINGUP:
-			bumpHoodAngle(1);
-			break;
-		case BUMPINGDOWN:
-			bumpHoodAngle(-1);
-			break;
-		default:
-			break;
-		}
-		
 		runShooterSpeedLoop();
-		runHoodPIDLoop();
+//		runHoodPIDLoop();
 
 	}
 	

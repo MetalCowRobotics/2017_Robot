@@ -6,6 +6,7 @@ import org.usfirst.frc.team4213.controllers.OperatorController;
 import org.usfirst.frc.team4213.controllers.TestController;
 import org.usfirst.frc.team4213.metallib.MetalRobot;
 import org.usfirst.frc.team4213.metallib.controllers.AIRFLOController;
+import org.usfirst.frc.team4213.metallib.controllers.CowGamepad;
 import org.usfirst.frc.team4213.metallib.controllers.Xbox360Controller;
 import org.usfirst.frc.team4213.metallib.util.PropertyStore;
 import org.usfirst.frc.team4213.rawsystems.Climber;
@@ -23,6 +24,7 @@ import org.usfirst.frc.team4213.systems.Subsystem;
 
 
 
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -34,8 +36,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends MetalRobot {
 
 	//Gamepads
-	AIRFLOController driverGamepad;
-	Xbox360Controller operatorGamepad;
+	CowGamepad driverGamepad;
+	CowGamepad operatorGamepad;
 	
 	//Systems
 	DriveSystem drivetrain;

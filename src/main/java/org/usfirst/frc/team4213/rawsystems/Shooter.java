@@ -4,7 +4,6 @@ import org.usfirst.frc.team4213.metallib.ComponentBuilder;
 import org.usfirst.frc.team4213.metallib.ComponentBuilder.MotorType;
 import org.usfirst.frc.team4213.metallib.util.PropertyStore;
 
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -17,8 +16,8 @@ public enum Shooter {
 	private final Encoder hoodEncoder, flywheelEncoder;
 	
 	private Shooter() {
-		flywheelMotor = ComponentBuilder.buildMotor(MotorType.JAGUAR, "flywheel.motor.channel", "flywheel.motor.reverse");
-		hoodMotor = ComponentBuilder.buildMotor(MotorType.JAGUAR, "hood.motor.channel", "hood.motor.reverse");
+		flywheelMotor = ComponentBuilder.buildMotor(MotorType.CANTALON, "flywheel.motor.channel", "flywheel.motor.reverse");
+		hoodMotor = ComponentBuilder.buildMotor(MotorType.CANTALON, "hood.motor.channel", "hood.motor.reverse");
 		hoodEncoder = new Encoder(4,5);
 		hoodEncoder.setDistancePerPulse(1/PropertyStore.INSTANCE.getDouble("hood.cpd"));
 		flywheelEncoder = new Encoder(0,1);

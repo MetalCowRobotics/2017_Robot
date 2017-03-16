@@ -71,16 +71,20 @@ public class OperatorController implements Runnable {
 	}
 	
 	public void moveHood() {
-		if (controller.getButton(GamepadButton.Y)) {
-			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(0.5));
-			shooter.ifPresent(ShooterSystem::bumpUp);
+//		if (controller.getButton(GamepadButton.Y)) {
+//			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(0.5));
+//			shooter.ifPresent(ShooterSystem::setDefault);
+//		}
+//		else if (controller.getButton(GamepadButton.A)) {
+//			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(-0.5));
+//			shooter.ifPresent(ShooterSystem::setRaised);
+//		}
+		double speed = controller.getLY();
+		if(Math.abs(speed) < 0.1){
+			speed = 0;
 		}
-		else if (controller.getButton(GamepadButton.A)) {
-			//shooter.ifPresent(shooter -> shooter.bumpHoodAngle(-0.5));
-			shooter.ifPresent(ShooterSystem::bumpDown);
-		} else {
-			shooter.ifPresent(ShooterSystem::noBump);
-		}
+		final double finalSpeed = speed;
+		shooter.ifPresent(shooter -> shooter.setHoodSpeed(finalSpeed));
 	}
 	
 	public void shoot() {
