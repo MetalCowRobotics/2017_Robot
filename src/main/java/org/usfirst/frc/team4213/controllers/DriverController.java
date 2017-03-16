@@ -26,8 +26,8 @@ public class DriverController implements Runnable {
     
     private DriveMode mode;
 
-    public DriverController(CowGamepad controller, DriveSystem driveSystem ) {
-        DriverController.controller = controller;
+    public DriverController(CowGamepad controller, DriveSystem driveSystem) {
+        DriverController.controller  = controller;
     	DriverController.driveSystem = Optional.ofNullable(driveSystem);
     	mode = DriveMode.TANK;
     }
@@ -37,46 +37,54 @@ public class DriverController implements Runnable {
 		double left;
 		double right;
 		
-		if(controller.getButton(GamepadButton.A)){
+		if (controller.getButton(GamepadButton.B)) {
 			driveSystem.ifPresent(DriveSystem::brake);
-		}else{
+		} else {
 			driveSystem.ifPresent(DriveSystem::drive);
 		}
 		
-		if(controller.getButton(GamepadButton.DPADLEFT)){
+		if (controller.getButton(GamepadButton.DPADLEFT)) {
 			mode = DriveMode.TANK;
-		}else if (controller.getButton(GamepadButton.DPADRIGHT)){
+		} else if (controller.getButton(GamepadButton.DPADRIGHT)) {
 			mode = DriveMode.ARCADE;
-		}else if (controller.getButton(GamepadButton.DPADUP)){
+		} else if (controller.getButton(GamepadButton.DPADUP)) {
 			mode = DriveMode.DEVIN;
 		}
 		
-		if(controller.getButton(GamepadButton.RB)){
+		if (controller.getButton(GamepadButton.RB) || 
+			controller.getButton(GamepadButton.LB)) {
 			driveSystem.ifPresent(DriveSystem::setFast);
-		}else if(controller.getButton(GamepadButton.LB)){
+		} else if (controller.getButton(GamepadButton.RT) ||
+				   controller.getButton(GamepadButton.LT)) {
 			driveSystem.ifPresent(DriveSystem::setSlow);
-		}else {
+		} else {
 			driveSystem.ifPresent(DriveSystem::setNormal);
+		}
+		
+		if (controller.getButtonToggled(GamepadButton.X)) {
+			driveSystem.ifPresent(DriveSystem::setForward);
+		} else {
+			driveSystem.ifPresent(DriveSystem::setReverse);
 		}
 		
 		DualDriveCommand command;
 		
-		switch(mode){
+		switch (mode) {
 		case ARCADE:
-			left = controller.getLY();
+			left  = controller.getLY();
 			right = controller.getRX();		
-			command = new ArcadeDriveCommand(left,right);
+			command = new ArcadeDriveCommand(left, right);
 			break;
 		case DEVIN:
-			left = ((Xbox360Controller)controller).getRT() - ((Xbox360Controller)controller).getLT();
+			left  = ((Xbox360Controller)controller).getRT() - ((Xbox360Controller)controller).getLT();
 			right = controller.getLX();
-			command = new ArcadeDriveCommand(left,right);
+			command = new ArcadeDriveCommand(left, right);
 			break;
 		case TANK:
 		default:
-			left = controller.getLY();
+			left  = controller.getLY();
 			right = controller.getRY();
-			command = new TankDriveCommand(left,right);
+			command = new TankDriveCommand(left, right);
 		}
 		
 		final DualDriveCommand finalCommand = command;
@@ -85,7 +93,7 @@ public class DriverController implements Runnable {
 		driveSystem.ifPresent(DriveSystem::run);
 	}
 
-	public static void setController(CowGamepad controller) {
+	public static void setController (CowGamepad controller) {
 		 DriverController.controller = controller;
 	}
 }
