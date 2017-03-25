@@ -1,7 +1,4 @@
-.classpath
-.project
 .idea
-.settings
 .gradle
 .DS_Store
 bin/
