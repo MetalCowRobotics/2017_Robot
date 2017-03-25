@@ -5,10 +5,8 @@
 .gradle
 .DS_Store
 bin/
+dist/
 target/
 build/
-<<<<<<< HEAD
-=======
 *.swp
-
->>>>>>> refs/remotes/origin/drivetrain-metallib
+sysProps.xml
