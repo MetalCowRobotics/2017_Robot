@@ -52,14 +52,13 @@ public class Robot extends MetalRobot {
 	RollerIntakeSystem rollerIntake;
 	ShooterSystem shooter;
 		
-	// Controllers
+	//Controllers
 	DriverController driver;
 	OperatorController operator;
 	AutonomousController auto;
 	TestController test;
 	
 	{	
-		
 		initGamepads();
 		drivetrain = initSubsystem(DriveSystem.class);
 		climber = initSubsystem(ClimberSystem.class);
@@ -113,17 +112,17 @@ public class Robot extends MetalRobot {
 //    	auto.run();
 //    }
     
-	public <T extends Subsystem> T initSubsystem(Class<T> subsystem){
+	public <T extends Subsystem> T initSubsystem (Class<T> subsystem) {
 		String systemName = subsystem.getSimpleName();
 		T system = null;
-		if(PropertyStore.INSTANCE.getBool(systemName.toLowerCase() + ".enabled")){
+		if (PropertyStore.INSTANCE.getBool(systemName.toLowerCase() + ".enabled")) {
 			try {
 				system = subsystem.newInstance();
 				System.out.println(systemName + " is Enabled");
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-		}else {
+		} else {
 			System.out.println(systemName + " is Disabled");
 		}
 		return system;
