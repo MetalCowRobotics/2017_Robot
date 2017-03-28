@@ -9,6 +9,9 @@ public class ArcadeDriveCommand implements DualDriveCommand {
 		if(Math.abs(throttle) < 0.08){
 			throttle = 0.01;
 		}
+		if(Math.abs(spin)<0.08){
+			spin = 0;
+		}
 		this.throttle = throttle;
 		this.spin = spin;
 	}

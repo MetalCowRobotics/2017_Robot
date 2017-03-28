@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4213.metallib.commands;
+package org.usfirst.frc.team4213.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class CommandSequence {
 		currentCommand.run();
 		
 		if (currentCommand.isFinished()) {
-			currentCommand.stop();
+			currentCommand.end();
 			index++;
 		}
 	}

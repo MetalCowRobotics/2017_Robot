@@ -91,7 +91,7 @@ public class AutonomousController implements Runnable{
 			straightAutoSimple();
 		}
 		runSystems();
-		SmartDashboard.putNumber("gyro.angle", Drivetrain.INSTANCE.getAngle());
+		SmartDashboard.putNumber("gyro.angle", Drivetrain.INSTANCE.getYaw());
 	}
 	
 	public void straightAutoSimple(){
@@ -148,7 +148,7 @@ public class AutonomousController implements Runnable{
 	public void straightGearLineAutoTimed(){
 		if(timer.get()<3){
 			angleController.setTarget(0);
-			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getAngle());
+			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
 			Drivetrain.INSTANCE.setLeftSpeed(-0.3+(power*0.5));
 			Drivetrain.INSTANCE.setRightSpeed(-0.3-(power*0.5));
 			gearIntake.ifPresent(GearIntakeSystem::closeTop);
@@ -159,7 +159,7 @@ public class AutonomousController implements Runnable{
 			gearIntake.ifPresent(GearIntakeSystem::dropGear);
 		}else if(timer.get() < 9){
 			angleController.setTarget(0);
-			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getAngle());
+			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
 			Drivetrain.INSTANCE.setLeftSpeed(0.3+(power*0.5));
 			Drivetrain.INSTANCE.setRightSpeed(0.3-(power*0.5));
 		}else if(timer.get() < 9.5){
@@ -167,12 +167,12 @@ public class AutonomousController implements Runnable{
 			Drivetrain.INSTANCE.setRightSpeed(0);
 		}else if(timer.get() < 11){
 			angleController.setTarget(45);
-			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getAngle());
+			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
 			Drivetrain.INSTANCE.setLeftSpeed(power * 0.5);
 			Drivetrain.INSTANCE.setRightSpeed(-power * 0.5);
 		}else if(timer.get() < 15){
 			angleController.setTarget(45);
-			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getAngle());
+			double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
 			Drivetrain.INSTANCE.setLeftSpeed(-0.3+power);
 			Drivetrain.INSTANCE.setRightSpeed(-0.3-power);
 		}
@@ -190,7 +190,7 @@ public class AutonomousController implements Runnable{
 	
 	public void rotate (double angle) {
 		angleController.setTarget(angle);
-		double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getAngle());
+		double power = angleController.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
 		Drivetrain.INSTANCE.setLeftSpeed(power);
 		Drivetrain.INSTANCE.setRightSpeed(-power);
 		if (Math.abs(angleController.getError()) < 2) {

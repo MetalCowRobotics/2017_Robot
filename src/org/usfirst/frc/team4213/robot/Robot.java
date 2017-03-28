@@ -67,7 +67,6 @@ public class Robot extends MetalRobot {
 		rollerIntake = initSubsystem(RollerIntakeSystem.class);
 		shooter = initSubsystem(ShooterSystem.class);
 		initControllers();
-		Drivetrain.INSTANCE.calibGyro();
 	}
 	
 	public void initGamepads(){
