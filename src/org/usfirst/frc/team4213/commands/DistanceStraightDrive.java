@@ -12,30 +12,32 @@ public class DistanceStraightDrive extends Command{
 	private final double maxSpeed;
 	PIDController angle = new PIDController("angle", -3, -0.5, -0.1, 1, true);
 	PIDController drive = new PIDController("dist", 0.1, 0,0,1,true);
+	double dist;
 
 	
 	
     public DistanceStraightDrive(double dist, double maxSpeed) {
         super();
-        drive.setTarget(dist);
         this.maxSpeed = Math.abs(maxSpeed);
+        this.dist = dist;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Drivetrain.INSTANCE.setLeftSpeed(0);
     	Drivetrain.INSTANCE.setRightSpeed(0);
+    	double startPos = Drivetrain.INSTANCE.getLeftPos();
+    	drive.setTarget(startPos+dist);
+    	angle.setTarget(Drivetrain.INSTANCE.getYaw());
     }
 
     // Called repeatedly when this Command is scheduled to run
     public void execute() {
+       	double offset = cap(angle.feedAndGetValue(Drivetrain.INSTANCE.getYaw()), maxSpeed * 0.4);
+    	double speed = cap(drive.feedAndGetValue(Drivetrain.INSTANCE.getLeftPos()), maxSpeed);
     	
-    	System.out.println("This command is runnin");
-    	double offset = angle.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
-    	double speed = drive.feedAndGetValue(Drivetrain.INSTANCE.getLeftPos());
-    	
-    	double leftPower = cap(speed + offset, maxSpeed);
-    	double rightPower = cap(speed - offset, maxSpeed);
+    	double leftPower = speed + offset;
+    	double rightPower = speed - offset;
     	
     	Drivetrain.INSTANCE.setLeftSpeed(leftPower);
     	Drivetrain.INSTANCE.setRightSpeed(rightPower);
@@ -54,7 +56,7 @@ public class DistanceStraightDrive extends Command{
 
     // Make this return true when this Command no longer needs to run execute()
     public boolean isFinished() {
-        return drive.getError() < 10;
+        return Math.abs(drive.getError()) < 10;
     }
 
     // Called once after isFinished returns true

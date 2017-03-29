@@ -3,15 +3,19 @@ package org.usfirst.frc.team4213.commands;
 import org.usfirst.frc.team4213.metallib.controlloops.PIDController;
 import org.usfirst.frc.team4213.rawsystems.Drivetrain;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  *
  */
 public class RotateDrive extends Command {
-	PIDController angle = new PIDController("angle", -3, -0.5, -0.1, 1, true);
+	PIDController angle = new PIDController("RotAngle", -3, 0, 0, 1, true);
+	final double maxSpeed;
 
-    public RotateDrive(double angle) {
+    public RotateDrive(double angle, double maxSpeed) {
         super();
         this.angle.setTarget(angle);
+        this.maxSpeed = maxSpeed;
     }
 
     // Called just before this Command runs the first time
@@ -23,7 +27,8 @@ public class RotateDrive extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double offset = angle.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
-    	cap(offset, 0.5);
+    	SmartDashboard.putNumber("Turn Speed", offset);
+    	cap(offset, maxSpeed);
 		Drivetrain.INSTANCE.setLeftSpeed(offset);
 		Drivetrain.INSTANCE.setRightSpeed(-offset);
     }
@@ -40,7 +45,7 @@ public class RotateDrive extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     public boolean isFinished() {
-        return angle.getError() < 1;
+        return Math.abs(angle.getError()) < 0.5;
     }
 
     // Called once after isFinished returns true

@@ -3,8 +3,6 @@ package org.usfirst.frc.team4213.commands;
 import org.usfirst.frc.team4213.metallib.controlloops.PIDController;
 import org.usfirst.frc.team4213.rawsystems.Drivetrain;
 
-import edu.wpi.first.wpilibj.command.TimedCommand;
-
 /**
  *
  */
@@ -16,31 +14,36 @@ public class TimedStraightDrive extends TimedCommand {
 	
     public TimedStraightDrive(double timeout, double speed) {
         super(timeout);
-        this.speed = speed;
-        angle.setTarget(0);
+    	this.speed = speed;
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    protected void start() {
     	Drivetrain.INSTANCE.setLeftSpeed(0);
     	Drivetrain.INSTANCE.setRightSpeed(0);
+    	angle.setTarget(Drivetrain.INSTANCE.getYaw());
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {		
-    	double offset = angle.feedAndGetValue(Drivetrain.INSTANCE.getYaw());
+    	double offset = cap(angle.feedAndGetValue(Drivetrain.INSTANCE.getYaw()), 0.4*speed);
 		Drivetrain.INSTANCE.setLeftSpeed(speed + offset);
 		Drivetrain.INSTANCE.setRightSpeed(speed - offset);
     }
-
-    // Called once after timeout
-    protected void end() {
-    	Drivetrain.INSTANCE.setLeftSpeed(0);
-    	Drivetrain.INSTANCE.setRightSpeed(0);
+    
+    public double cap(double speed, double max){
+    	if(speed >= 0){
+    		speed = Math.min(speed, max);
+    	}else{
+    		speed = Math.max(speed, -max);
+    	}
+    	
+    	return speed;
     }
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
+    // Called once after timeout
+    protected void stop() {
+    	Drivetrain.INSTANCE.setLeftSpeed(0);
+    	Drivetrain.INSTANCE.setRightSpeed(0);
     }
 }
