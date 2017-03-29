@@ -1,0 +1,8 @@
+[NetworkTables Storage 3.0]
+double "/Preferences/angle.kd"=-3
+double "/Preferences/angle.ki"=-1.2
+double "/Preferences/angle.kp"=-5
+double "/Preferences/auto.proportion"=4000
+double "/Preferences/dist.kd"=0
+double "/Preferences/dist.ki"=0
+double "/Preferences/dist.kp"=10
